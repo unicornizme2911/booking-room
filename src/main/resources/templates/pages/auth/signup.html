@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:insert="~{fragments/heading/heading :: heading(title = 'Sign Up')}"/>
+<body>
+<th:block th:replace="~{fragments/util/header :: header}"/>
+
+<th:block th:replace="~{fragments/auth/signup :: signup}"/>
+
+<th:block th:replace="~{fragments/util/footer :: footer}"/>
+
+<th:block th:insert="~{fragments/scripts/scripts :: scripts}"/>
+<script th:src="@{/js/auth/signUp.js}"></script>
+</body>
+</html>

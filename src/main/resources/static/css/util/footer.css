@@ -1,0 +1,25 @@
+.footer {
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+}
+
+.line {
+    height: 1px;
+    margin: 1em 5em;
+    background-image: linear-gradient(to right, #434343 0%, black 100%);
+}
+
+.footer__content .footer__content__infomation .footer__links{
+    font-size: 1rem;
+    color: rgba(var(--black), 1);
+}
+
+.footer__content .footer__content__infomation .footer__links h6 {
+    font-size: 1rem;
+}
+
+.footer__copyright {
+    background-color: rgba(var(--black),1);
+    color: rgba(var(--white), 1);
+}

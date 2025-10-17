@@ -1,0 +1,41 @@
+<main th:fragment="signin" class="signin">
+    <div class="container-fluid">
+        <div class="row justify-content-center align-items-center m-5">
+            <div class="offset-3"></div>
+
+            <div class="d-flex justify-content-center text-center flex-column col-6">
+                <div class="title h4 text-uppercase">Login Admin</div>
+                <form action="/" class="form d-flex flex-column" id="formSignInAdmin">
+                    <div class="input-group pb-3">
+                        <input type="email" id="email" name="email" class="form-control border-1 rounded-0"
+                               placeholder="Email"
+                               style="min-height: 3rem">
+                    </div>
+
+                    <div class="input-group pb-3">
+                        <input type="password" name="password" class="form-control border-1 rounded-0" id="password"
+                               placeholder="Password" style="min-height: 3rem">
+                    </div>
+
+                    <span class="error mb-3 text-danger"></span>
+
+                    <div class="d-flex justify-content-between align-items-center pt-2 pb-5">
+                        <div class="">
+                            <input type="checkbox" name="check" id="remember-me" class="me-2"> Remember me
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-center align-items-center">
+
+                        <div>
+                            <button type="submit" class="btn text-uppercase p-3 w-100 px-5 text-dark border-0 rounded-0"
+                                    style="background-color: #E3C5B8">Login
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="offset-3"></div>
+        </div>
+    </div>
+</main>

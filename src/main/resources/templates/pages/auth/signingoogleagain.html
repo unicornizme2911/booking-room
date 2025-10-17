@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:insert="~{fragments/heading/heading :: heading(title = 'Welcome to Seesaw')}"/>
+<th:block th:insert="~{fragments/scripts/scripts :: scripts}"/>
+<script>
+  $(document).ready(function (e){
+    window.addEventListener('load', function () {
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      const email = urlParams.get('email');
+      $.ajax({
+        url: "/api/user/get-user-by-email",
+        type: "POST",
+        data: email,
+        contentType: "application/json",
+        success: function (data) {
+          console.log(data)
+          localStorage.setItem('token', data.access_token);
+          window.location.href = "/"
+        },
+        error: function (error) {
+          console.log(error)
+          errorText.text(error.responseJSON.message)
+        }
+      })
+    })
+  })
+</script>
+</html>

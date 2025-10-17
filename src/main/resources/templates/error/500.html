@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.thymeleaf.org">
+<th:block th:insert="~{/fragments/heading/heading :: heading(title='500')}" />
+<style>
+  .content--404 h1 span{
+    font-size: 18vw;
+    line-height: 1em;
+    background: linear-gradient(to right, #434343 0%, black 100%);
+    color: rgb(var(--highlight));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .content--404 h4 {
+    text-transform: uppercase;
+    color: #000;
+    font-size: 2rem;
+    font-weight: 300;
+    line-height: normal;
+  }
+</style>
+<body>
+<div class="section--404 min-vh-100">
+  <div class="container mt-5">
+    <div class="row error d-flex justify-content-center align-items-center">
+      <div class="col-md-8 col-sm-10 col-12 content--404 d-flex flex-column gap-3 justify-content-center align-items-center">
+        <h1><span>500</span></h1>
+        <h4 class="">Opps! INTERNAL SERVER ERROR</h4>
+      </div>
+    </div>
+  </div>
+</div>
+<th:block th:insert="~{fragments/scripts/scripts :: scripts}"/>
+</body>
+</html>

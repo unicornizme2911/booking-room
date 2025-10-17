@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:insert="~{fragments/heading/heading :: heading(title = 'Update Information')}"/>
+<body>
+<th:block th:replace="~{fragments/util/header :: header}"/>
+
+<th:block th:replace="~{fragments/auth/accountsetting :: accountsetting}"/>
+
+<th:block th:replace="~{fragments/util/footer :: footer}"/>
+
+<th:block th:insert="~{fragments/scripts/scripts :: scripts}"/>
+<script th:src="@{/js/auth/accountSetting.js}"></script>
+</body>
+</html>
