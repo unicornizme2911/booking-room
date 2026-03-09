@@ -82,8 +82,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> {
                             authorize
-                                    .requestMatchers(routes)
-                                    .permitAll()
+                                    .requestMatchers(routes).permitAll()
                                     .requestMatchers(
                                             "/api/v1/admin/**"
                                     ).hasRole(Role.ADMIN.name())

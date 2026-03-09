@@ -4,6 +4,7 @@ import com.booking.repository.TokenRepository;
 import com.booking.services.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -31,28 +32,30 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal( @NonNull HttpServletRequest request,
                                      @NonNull HttpServletResponse response,
                                      @NonNull FilterChain filterChain) throws ServletException, IOException {
-
-        if (request.getServletPath().contains("/api/v1/auth")) {
+        String path = request.getServletPath();
+        if (path.equals("/api/v1/auth/login") ||
+                path.equals("/api/v1/auth/register") ||
+                path.equals("/api/v1/auth/refresh")) {
             filterChain.doFilter(request, response);
             return;
         }
-        final String authorizationHeader = request.getHeader("Authorization");
-        final String jwt;
-        final String email;
-
-        if (authorizationHeader == null || !authorizationHeader.startsWith(TokenType.BEARER.getTokenType())) {
+        String accessToken = null;
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("accessToken")) {
+                    accessToken = cookie.getValue();
+                }
+            }
+        }
+        if (accessToken == null) {
             filterChain.doFilter(request, response);
             return;
         }
-
-        jwt = authorizationHeader.substring(7);
-        email = jwtService.extractEmail(jwt);
+        String email = jwtService.extractEmail(accessToken);
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-            var isTokenValid = tokenRepository.findByToken(jwt)
-                    .map(t -> !t.isExpired() && !t.isRevoked())
-                    .orElse(false);
-            if (jwtService.isTokenValid(jwt, userDetails) && isTokenValid) {
+            if (userDetails != null && jwtService.isTokenValid(accessToken, userDetails)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,

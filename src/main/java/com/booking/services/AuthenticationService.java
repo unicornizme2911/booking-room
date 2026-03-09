@@ -18,6 +18,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,6 +29,11 @@ import java.util.Date;
 
 @Service
 public class AuthenticationService {
+    @Value("${application.security.jwt.expiration}")
+    private int jwtExpiration;
+    @Value("${application.security.jwt.refresh-token.expiration}")
+    private int refreshExpiration;
+
     @Autowired
     private UserRepository userRepository;
 
@@ -48,17 +54,17 @@ public class AuthenticationService {
 
     private String tokenToVerify;
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request, HttpServletResponse httpServletResponse) {
+    public AuthenticationResponse authenticate(AuthenticationRequest request, HttpServletResponse response){
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         UserModel user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new UserNotFoundException("User not found"));
-        var jwtToken = jwtService.generateToken(user);
-        var refreshToken = jwtService.generateRefreshToken(user);
-        revokeAllUserTokens(user);
-        saveUserToken(user, jwtToken);
-        createCookie(refreshToken, httpServletResponse);
-        createCookieForRole(user.getRole().name(), httpServletResponse);
+        String accessToken = jwtService.generateToken(user);
+        String refreshToken = jwtService.generateRefreshToken(user);
+        saveUserToken(user, refreshToken);
+        createAccessTokenCookie(accessToken, response);
+        createRefreshTokenCookie(refreshToken, response);
+        createCookieForRole(user.getRole().name(),response);
         return AuthenticationResponse.builder()
-                .accessToken(jwtToken)
+                .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
     }
@@ -73,7 +79,7 @@ public class AuthenticationService {
         }
     }
 
-    public AuthenticationResponse register(RegisterRequest request) throws UserExistException {
+    public AuthenticationResponse register(RegisterRequest request, HttpServletResponse response) throws UserExistException {
         if (userRepository.existsUserModelByEmail(request.getEmail())) {
             throw new UserExistException("User already exist");
         }
@@ -89,15 +95,18 @@ public class AuthenticationService {
                 .provider(Provider.LOCAL)
                 .build();
         var savedUser = userRepository.save(user);
-        var jwtToken = jwtService.generateToken(user);
+        var accessToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
-        saveUserToken(savedUser, jwtToken);
+        saveUserToken(savedUser, refreshToken);
+        createAccessTokenCookie(accessToken, response);
+        createRefreshTokenCookie(refreshToken, response);
+        createCookieForRole(user.getRole().name(),response);
 //        cartService.addCart(CartModel.builder()
 //                .user(savedUser)
 //                .total_amount(0.0D)
 //                .build());
         return AuthenticationResponse.builder()
-                .accessToken(jwtToken)
+                .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
     }
@@ -114,30 +123,28 @@ public class AuthenticationService {
 
     public void refreshToken(HttpServletRequest request,
                              HttpServletResponse response) throws IOException {
-        final String authHeader = request.getHeader("Authorization");
-        final String refreshToken;
-        final String email;
-
-
-        if (authHeader == null || !authHeader.startsWith(TokenType.BEARER.getTokenType())) {
-            return;
+        Cookie[] cookies = request.getCookies();
+        String refreshToken = null;
+        if (cookies == null) return;
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("refreshToken")) {
+                refreshToken = cookie.getValue();
+            }
         }
-        refreshToken = authHeader.substring(7);
-        email = jwtService.extractEmail(refreshToken);
+        if (refreshToken == null) return;
+        String email = jwtService.extractEmail(refreshToken);
         if (email != null) {
-            var user = this.userRepository.findByEmail(email)
+            var user = userRepository.findByEmail(email)
                     .orElseThrow();
             if (jwtService.isTokenValid(refreshToken, user)) {
-                var accessToken = jwtService.generateToken(user);
                 revokeAllUserTokens(user);
-                saveUserToken(user, accessToken);
+                var newAccessToken = jwtService.generateToken(user);
                 var authResponse = AuthenticationResponse.builder()
-                        .accessToken(accessToken)
+                        .accessToken(newAccessToken)
                         .refreshToken(refreshToken)
                         .build();
                 new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
             }
-
         }
     }
 
@@ -204,11 +211,21 @@ public class AuthenticationService {
         throw new UserNotFoundException("User not found");
     }
 
-    protected void createCookie(String token, HttpServletResponse response) {
+    protected void createAccessTokenCookie(String token, HttpServletResponse response) {
+        Cookie cookie = new Cookie("accessToken", token);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(jwtExpiration/1000);
+        cookie.setSecure(false);
+        response.addCookie(cookie);
+    }
+
+    protected void createRefreshTokenCookie(String token, HttpServletResponse response) {
         Cookie cookie = new Cookie("refreshToken", token);
         cookie.setHttpOnly(true);
         cookie.setPath("/");
-        cookie.setMaxAge(7 * 24 * 60 * 60); // 7 days
+        cookie.setMaxAge(refreshExpiration/1000);
+        cookie.setSecure(false);
         response.addCookie(cookie);
     }
 
@@ -216,7 +233,8 @@ public class AuthenticationService {
         Cookie cookie = new Cookie("role", role);
         cookie.setHttpOnly(true);
         cookie.setPath("/");
-        cookie.setMaxAge(7 * 24 * 60 * 60);
+        cookie.setMaxAge(refreshExpiration/1000);
+        cookie.setSecure(false);
         response.addCookie(cookie);
     }
 }

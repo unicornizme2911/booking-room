@@ -1,7 +1,9 @@
 package com.booking.services;
 
 import com.booking.configuration.TokenType;
+import com.booking.models.TokenModel;
 import com.booking.repository.TokenRepository;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,26 +18,49 @@ public class LogoutService implements LogoutHandler {
     @Autowired
     private TokenRepository tokenRepository;
 
-    @Autowired
-    private AuthenticationService authenticationService;
-
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        final String authorizationHeader = request.getHeader("Authorization");
-        final String jwt;
-        if (authorizationHeader == null || !authorizationHeader.startsWith(TokenType.BEARER.getTokenType())) {
-            return;
+        String refreshToken = null;
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("refreshToken")) {
+                    refreshToken = cookie.getValue();
+                }
+            }
         }
-        jwt = authorizationHeader.substring(7);
-        var storedToken = tokenRepository.findByToken(jwt)
+        System.out.println("refreshToken: " + refreshToken);
+        if (refreshToken == null) return;
+        TokenModel storedToken = tokenRepository.findByToken(refreshToken)
                 .orElse(null);
         if (storedToken != null) {
             storedToken.setExpired(true);
             storedToken.setRevoked(true);
-            authenticationService.createCookie("null", response);
-            authenticationService.createCookieForRole("null", response);
             tokenRepository.save(storedToken);
             SecurityContextHolder.clearContext();
         }
+        clearCookies(response);
+    }
+
+    private void clearCookies(HttpServletResponse response) {
+
+        Cookie access = new Cookie("accessToken", null);
+        access.setMaxAge(0);
+        access.setPath("/");
+        access.setSecure(false);
+
+        Cookie refresh = new Cookie("refreshToken", null);
+        refresh.setMaxAge(0);
+        refresh.setPath("/");
+        refresh.setSecure(false);
+
+        Cookie role = new Cookie("role", null);
+        role.setMaxAge(0);
+        role.setPath("/");
+        role.setSecure(false);
+
+        response.addCookie(access);
+        response.addCookie(refresh);
+        response.addCookie(role);
     }
 }

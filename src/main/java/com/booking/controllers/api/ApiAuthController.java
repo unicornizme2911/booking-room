@@ -3,20 +3,21 @@ package com.booking.controllers.api;
 import com.booking.authentication.*;
 import com.booking.dto.response.MailResponse;
 import com.booking.dto.response.MessageResponse;
+import com.booking.dto.response.UserResponse;
+import com.booking.models.UserModel;
 import com.booking.services.AuthenticationService;
 import com.booking.services.LogoutService;
+import com.booking.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
@@ -26,14 +27,16 @@ import java.io.IOException;
 class ApiAuthController {
     @Autowired
     private AuthenticationService authenticationService;
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private LogoutService logoutService;
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(
-            @RequestBody @Valid RegisterRequest request) {
-        return ResponseEntity.ok(authenticationService.register(request));
+            @RequestBody @Valid RegisterRequest request, HttpServletResponse httpServletResponse) {
+        return ResponseEntity.ok(authenticationService.register(request, httpServletResponse));
     }
 
     @PostMapping("/login")
@@ -86,5 +89,14 @@ class ApiAuthController {
     public ResponseEntity<MessageResponse> checkEmail(
             @RequestBody @Valid EmailRequest request) {
         return ResponseEntity.ok(authenticationService.checkEmail(request));
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserResponse> getCurrentUser(Authentication authentication) {
+        if (authentication == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        UserModel user = (UserModel) authentication.getPrincipal();
+        return ResponseEntity.ok(userService.toResponse(user));
     }
 }

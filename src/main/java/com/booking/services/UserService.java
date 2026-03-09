@@ -142,11 +142,12 @@ public class UserService implements UserDetailsService {
         var user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User not found"));
         if (user != null) {
             user.setDate_updated(Date.from(java.time.Instant.now()));
-            var jwtToken = jwtService.generateToken(user);
+            var accessToken = jwtService.generateToken(user);
             var refreshToken = jwtService.generateRefreshToken(user);
             authenticationService.revokeAllUserTokens(user);
-            authenticationService.saveUserToken(user, jwtToken);
-            authenticationService.createCookie(refreshToken, httpServletResponse);
+            authenticationService.saveUserToken(user, refreshToken);
+            authenticationService.createAccessTokenCookie(accessToken,  httpServletResponse);
+            authenticationService.createRefreshTokenCookie(refreshToken, httpServletResponse);
             authenticationService.createCookieForRole(user.getRole().toString(), httpServletResponse);
             userRepository.save(user);
         }
@@ -161,10 +162,11 @@ public class UserService implements UserDetailsService {
                 .date_created(Date.from(java.time.Instant.now()))
                 .build();
         var savedUser = userRepository.save(user);
-        var jwtToken = jwtService.generateToken(user);
+        var accessToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
-        authenticationService.saveUserToken(savedUser, jwtToken);
-        authenticationService.createCookie(refreshToken, response);
+        authenticationService.saveUserToken(savedUser, refreshToken);
+        authenticationService.createAccessTokenCookie(accessToken, response);
+        authenticationService.createRefreshTokenCookie(refreshToken, response);
         authenticationService.createCookieForRole(savedUser.getRole().toString(), response);
     }
 
