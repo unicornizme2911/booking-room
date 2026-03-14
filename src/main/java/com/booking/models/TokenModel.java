@@ -28,7 +28,7 @@ public class TokenModel {
 
     private boolean revoked;
 
-    @ManyToOne(targetEntity = UserModel.class)
+    @ManyToOne(targetEntity = UserModel.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserModel users;
 }

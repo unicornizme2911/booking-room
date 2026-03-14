@@ -13,7 +13,6 @@ import com.booking.repository.TokenRepository;
 import com.booking.repository.UserRepository;
 import com.booking.services.impl.MailServiceImpl;
 import com.booking.utils.GenerateToken;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -139,11 +138,7 @@ public class AuthenticationService {
             if (jwtService.isTokenValid(refreshToken, user)) {
                 revokeAllUserTokens(user);
                 var newAccessToken = jwtService.generateToken(user);
-                var authResponse = AuthenticationResponse.builder()
-                        .accessToken(newAccessToken)
-                        .refreshToken(refreshToken)
-                        .build();
-                new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
+                createAccessTokenCookie(newAccessToken, response);
             }
         }
     }

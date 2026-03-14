@@ -80,24 +80,15 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> {
-                            authorize
-                                    .requestMatchers(routes).permitAll()
-                                    .requestMatchers(
-                                            "/api/v1/admin/**"
-                                    ).hasRole(Role.ADMIN.name())
-                                    .anyRequest().authenticated();
-                        }
-                )
-                .exceptionHandling(exceptionHandling -> exceptionHandling
-                        .accessDeniedPage("/error/404")
-                        .authenticationEntryPoint(new AuthenticationEntryPoint() {
-                            @Override
-                            public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-                                response.sendRedirect("/error/404");
-                            }
-                        })
-                )
+                    authorize
+                            .requestMatchers(routes).permitAll()
+                            .requestMatchers(
+                                    "/api/v1/admin/**"
+                            ).hasRole(Role.ADMIN.name())
+                            .anyRequest().authenticated();
+                })
                 .formLogin(formLogin -> formLogin
                         .loginPage("/auth/login")
                         .loginPage("/admin/login")
@@ -112,7 +103,6 @@ public class SecurityConfig {
                         .successHandler(
                                 (request, response, authentication) -> {
                                     CustomOAuth2User oauthUser = (CustomOAuth2User) authentication.getPrincipal();
-
                                     if (userService.isExistUser(oauthUser.getEmail())) {
                                         userService.processOAuthPostLogin(oauthUser.getEmail(), response);
                                         response.sendRedirect("/user/login-google-again?email=" + oauthUser.getEmail());
@@ -120,18 +110,27 @@ public class SecurityConfig {
                                         userService.processOAuthPostRegister(oauthUser.getEmail(), response);
                                         response.sendRedirect("/user/login-google-success?email=" + oauthUser.getEmail());
                                     }
-                                }
-                        )
+                                })
                 )
                 .authenticationProvider(authenticationProvider)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout(logout -> logout
                         .logoutUrl("/api/v1/auth/logout")
                         .addLogoutHandler(logoutHandler)
                         .logoutSuccessHandler(
                                 (request, response, authentication) -> SecurityContextHolder.clearContext()
-                        )
+                        ))
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+//                        .accessDeniedPage("/error/404")
+//                        .authenticationEntryPoint(new AuthenticationEntryPoint() {
+//                            @Override
+//                            public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+//                                response.sendRedirect("/error/404");
+//                            }
+//                        })
+                         .authenticationEntryPoint((request, response, ex) ->{
+                             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                         })
                 );
         return http.build();
     }

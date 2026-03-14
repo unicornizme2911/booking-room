@@ -3,6 +3,7 @@ package com.booking.models;
 import java.util.*;
 import jakarta.persistence.*;
 import lombok.*;
+import net.minidev.json.annotate.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -45,6 +46,7 @@ public class UserModel implements UserDetails {
     private Provider provider;
 
     @OneToMany(mappedBy = "users",targetEntity = TokenModel.class)
+    @JsonIgnore
     private Collection<TokenModel> tokens;
 
     @OneToMany(mappedBy = "user",targetEntity = ReservationModel.class)
