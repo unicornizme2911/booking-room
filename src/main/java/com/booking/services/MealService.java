@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-class MealService {
+public class MealService {
     @Autowired
     private MealRepository mealRepository;
 
@@ -38,7 +38,7 @@ class MealService {
                 .build();
     }
 
-    public MealResponse save(MealRequest request){
+    public MealResponse add(MealRequest request){
         var meal = toEntity(request);
         mealRepository.save(meal);
         return toResponse(meal);

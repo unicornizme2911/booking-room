@@ -1,31 +1,31 @@
 package com.booking.models;
-import lombok.*;
+
 import jakarta.persistence.*;
+import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import java.util.*;
 
 @Entity
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "invoices")
+@Table(name = "reservation_rooms")
 @Getter
 @Setter
 @EntityListeners(AuditingEntityListener.class)
-public class InvoiceModel {
+public class ReservationRoom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Date created_date;
+    private Double price_at_booking;
 
-    private Double total;
-    
-    private String payment_method;
+    private Integer guest_count;
 
-    private String payment_status;
-
-    @OneToOne
-    @JoinColumn(name = "reservation_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "reservation_id")
     private ReservationModel reservation;
+
+    @ManyToOne
+    @JoinColumn(name = "room_id")
+    private RoomModel room;
 }

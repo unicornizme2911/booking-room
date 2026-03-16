@@ -1,0 +1,47 @@
+[
+  {
+    "name": "Standard Room",
+    "description": "A comfortable room suitable for solo travelers or couples. Basic amenities included.",
+    "capacity": 2,
+    "price": 50,
+    "bed_type": "1 Double Bed",
+    "room_size": 20,
+    "feature_ids": [1,2,3,5,11]
+  },
+  {
+    "name": "Superior Room",
+    "description": "A larger room with improved comfort and additional amenities.",
+    "capacity": 2,
+    "price": 70,
+    "bed_type": "1 Queen Bed",
+    "room_size": 25,
+    "feature_ids": [1,2,3,4,5,11,12]
+  },
+  {
+    "name": "Deluxe Room",
+    "description": "Spacious room with balcony and city view, perfect for relaxing stays.",
+    "capacity": 3,
+    "price": 100,
+    "bed_type": "1 King Bed",
+    "room_size": 32,
+    "feature_ids": [1,2,3,4,5,6,8,11,12]
+  },
+  {
+    "name": "Family Room",
+    "description": "Ideal for families, offering multiple beds and extra space.",
+    "capacity": 4,
+    "price": 130,
+    "bed_type": "2 Double Beds",
+    "room_size": 40,
+    "feature_ids": [1,2,3,4,5,9,10,11,12]
+  },
+  {
+    "name": "Suite Room",
+    "description": "Luxury suite with separate living area, premium facilities and sea view.",
+    "capacity": 4,
+    "price": 200,
+    "bed_type": "1 King Bed",
+    "room_size": 55,
+    "feature_ids": [1,2,3,4,5,6,7,9,10,11,12,13,14,15]
+  }
+]

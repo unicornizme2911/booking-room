@@ -61,7 +61,10 @@ public class ReservationService {
                 .check_in(reservation.getCheck_in())
                 .check_out(reservation.getCheck_out())
                 .user(reservation.getUser() == null ? null : userService.toResponse(reservation.getUser()))
-                .rooms(reservation.getRooms() == null ? null : roomService.toResponse(reservation.getRooms()))
+                .rooms(reservation.getReservation_rooms() == null ? null :
+                        reservation.getReservation_rooms().stream().map(rm -> {
+                            return roomService.toResponse(rm.getRoom());
+                        }).toList())
                 .transport(reservation.getTransport() == null ? null : transportService.toResponse(reservation.getTransport()))
                 .meals(reservation.getReservation_meals() == null ? null :
                         reservation.getReservation_meals().stream().map(rm -> {
@@ -100,7 +103,7 @@ public class ReservationService {
         var reservation = toEntity(request);
         reservation.setUser(user);
         reservation.setTransport(transport);
-        reservation.setRooms(rooms);
+//        reservation.setRooms(rooms);
 
         var reservationSaved = reservationRepository.save(reservation);
 
@@ -115,24 +118,24 @@ public class ReservationService {
         return toResponse(reservationSaved);
     }
 
-    public List<RoomModel> checkRoomInDay(Date fromDate, Date toDate){
-        if (fromDate.after(toDate) || fromDate.equals(toDate)) {
-            throw new IllegalArgumentException("Check in date must be before check out date");
-        }
-
-        List<ReservationModel> reservations = reservationRepository.findOverlappingReservations(fromDate, toDate);
-
-        Set<Long> room_ids = reservations.stream()
-                .flatMap(r -> r.getRooms().stream())
-                .map(RoomModel::getId)
-                .collect(Collectors.toSet());
-
-        List<RoomModel> availableRooms = room_ids.isEmpty()
-                ? roomRepository.findAll()
-                : roomRepository.findAll().stream().filter(r -> !room_ids.contains(r.getId())).toList();
-
-        return availableRooms;
-    }
+//    public List<RoomModel> checkRoomInDay(Date fromDate, Date toDate){
+//        if (fromDate.after(toDate) || fromDate.equals(toDate)) {
+//            throw new IllegalArgumentException("Check in date must be before check out date");
+//        }
+//
+//        List<ReservationModel> reservations = reservationRepository.findOverlappingReservations(fromDate, toDate);
+//
+//        Set<Long> room_ids = reservations.stream()
+//                .flatMap(r -> r.getRooms().stream())
+//                .map(RoomModel::getId)
+//                .collect(Collectors.toSet());
+//
+//        List<RoomModel> availableRooms = room_ids.isEmpty()
+//                ? roomRepository.findAll()
+//                : roomRepository.findAll().stream().filter(r -> !room_ids.contains(r.getId())).toList();
+//
+//        return availableRooms;
+//    }
 
 
 }

@@ -1,0 +1,52 @@
+[
+  {
+    "name": "Breakfast Buffet",
+    "price": 150000,
+    "description": "Buffet breakfast with Asian and Western dishes"
+  },
+  {
+    "name": "Continental Breakfast",
+    "price": 120000,
+    "description": "Light breakfast with bread, butter, jam, coffee and juice"
+  },
+  {
+    "name": "Vietnamese Breakfast Set",
+    "price": 100000,
+    "description": "Traditional breakfast with pho or banh mi and coffee"
+  },
+  {
+    "name": "Lunch Set Menu",
+    "price": 200000,
+    "description": "Three-course lunch including starter, main dish and dessert"
+  },
+  {
+    "name": "Dinner Set Menu",
+    "price": 250000,
+    "description": "Evening meal with appetizer, main course and dessert"
+  },
+  {
+    "name": "Seafood Dinner Buffet",
+    "price": 450000,
+    "description": "Fresh seafood buffet including shrimp, crab and grilled fish"
+  },
+  {
+    "name": "Vegetarian Meal",
+    "price": 180000,
+    "description": "Healthy vegetarian dishes prepared with fresh vegetables"
+  },
+  {
+    "name": "Room Service Meal",
+    "price": 220000,
+    "description": "Private meal delivered directly to guest room"
+  },
+  {
+    "name": "Kids Meal",
+    "price": 90000,
+    "description": "Small meal for children including fries, nuggets and juice"
+  },
+  {
+    "name": "Luxury Dinner",
+    "price": 600000,
+    "description": "Premium dinner with steak, wine and dessert"
+  }
+]

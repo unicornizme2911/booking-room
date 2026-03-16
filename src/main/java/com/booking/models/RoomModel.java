@@ -26,9 +26,6 @@ public class RoomModel {
     private int roomFloor;
 
     @Column(nullable = false)
-    private Double price;
-
-    @Column(nullable = false)
     private String status;
 
     @Column(name = "image_path")
@@ -38,6 +35,6 @@ public class RoomModel {
     @JoinColumn(name = "category_id", nullable = false)
     private CategoryModel category;
 
-    @ManyToMany(mappedBy = "rooms")
-    private List<ReservationModel> reservations;
+    @OneToMany(mappedBy = "room")
+    private List<ReservationRoom> reservation_rooms;
 }

@@ -28,7 +28,7 @@ class ApiCategoryController {
 
     @PostMapping("/add")
     public ResponseEntity<CategoryResponse> addCategory(
-            @RequestBody @ModelAttribute @Valid CategoryRequest categoryRequest
+            @ModelAttribute @Valid CategoryRequest categoryRequest
     ){
         return ResponseEntity.ok().body(categoryService.add(categoryRequest));
     }

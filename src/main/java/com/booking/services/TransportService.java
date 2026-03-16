@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-class TransportService {
+public class TransportService {
     @Autowired
     private TransportRepository transportRepository;
     @Autowired
@@ -39,7 +39,7 @@ class TransportService {
                 .build();
     }
 
-    public TransportResponse save(TransportRequest request){
+    public TransportResponse add(TransportRequest request){
         var transport = toEntity(request);
         transportRepository.save(transport);
         return toResponse(transport);

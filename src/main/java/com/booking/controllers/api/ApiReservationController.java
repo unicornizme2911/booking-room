@@ -34,11 +34,11 @@ class ApiReservationController {
         return ResponseEntity.ok().body(reservationService.add(reservationRequest));
     }
 
-    @PostMapping("/checking")
-    public ResponseEntity<?>  checkReservation(
-            @RequestBody Date fromDate,
-            @RequestBody Date toDate
-    ){
-        return ResponseEntity.ok().body(reservationService.checkRoomInDay(fromDate,toDate));
-    }
+//    @PostMapping("/checking")
+//    public ResponseEntity<?>  checkReservation(
+//            @RequestBody Date fromDate,
+//            @RequestBody Date toDate
+//    ){
+//        return ResponseEntity.ok().body(reservationService.checkRoomInDay(fromDate,toDate));
+//    }
 }

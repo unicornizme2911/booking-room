@@ -1,0 +1,42 @@
+[
+  {
+    "vehicle": "Motorbike Pickup",
+    "price": 50000
+  },
+  {
+    "vehicle": "4-Seater Car (Airport Pickup)",
+    "price": 250000
+  },
+  {
+    "vehicle": "7-Seater Car (Family Transfer)",
+    "price": 350000
+  },
+  {
+    "vehicle": "Luxury Sedan",
+    "price": 500000
+  },
+  {
+    "vehicle": "SUV Airport Transfer",
+    "price": 550000
+  },
+  {
+    "vehicle": "Minivan 16 Seats",
+    "price": 800000
+  },
+  {
+    "vehicle": "Private Limousine",
+    "price": 1200000
+  },
+  {
+    "vehicle": "Electric Shuttle Bus",
+    "price": 150000
+  },
+  {
+    "vehicle": "Hotel Shuttle Van",
+    "price": 100000
+  },
+  {
+    "vehicle": "VIP Airport Limousine",
+    "price": 1800000
+  }
+]

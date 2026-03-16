@@ -17,7 +17,6 @@ public class RoomRequest {
     private String roomNumber;
     @Column(nullable = false, unique = true)
     private int roomFloor;
-    private Double price;
     private String status;
     private MultipartFile imagePath;
     private String categoryId;

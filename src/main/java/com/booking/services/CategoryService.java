@@ -2,28 +2,48 @@ package com.booking.services;
 
 import com.booking.dto.request.CategoryRequest;
 import com.booking.dto.response.CategoryResponse;
+import com.booking.models.CategoryImage;
 import com.booking.models.CategoryModel;
+import com.booking.models.FeatureModel;
+import com.booking.repository.CategoryImageRepository;
 import com.booking.repository.CategoryRepository;
+import com.booking.repository.FeatureRepository;
+import com.booking.utils.FileUploadUtil;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
+    private FeatureRepository featureRepository;
+    @Autowired
+    private CategoryImageRepository categoryImageRepository;
+    @Autowired
     private RoomService roomService;
+    @Autowired
+    private FeatureService featureService;
 
     public CategoryResponse toResponse(CategoryModel category){
         return CategoryResponse.builder()
                 .id(category.getId())
                 .name(category.getName())
-                .rooms(category.getRooms() == null ? null : roomService.toResponse(category.getRooms()))
+                .description(category.getDescription())
+                .capacity(category.getCapacity())
+                .price(category.getPrice())
+                .bed_type(category.getBed_type())
+                .room_size(category.getRoom_size())
+                .images(category.getImages() == null ? List.of() :
+                        category.getImages().stream().map(CategoryImage::getImage).toList())
+                .features(category.getFeatures() == null ? null : featureService.toResponse(category.getFeatures()))
                 .build();
     }
 
@@ -35,13 +55,41 @@ public class CategoryService {
         return CategoryModel.builder()
                 .id(request.getId())
                 .name(request.getName())
+                .description(request.getDescription())
+                .capacity(request.getCapacity())
+                .price(request.getPrice())
+                .bed_type(request.getBed_type())
+                .room_size(request.getRoom_size())
                 .build();
     }
 
     public CategoryResponse add(CategoryRequest request){
-        var category = toEntity(request);
-        categoryRepository.save(category);
-        return toResponse(category);
+        if(categoryRepository.findByName(request.getName()).isPresent()){
+            throw new IllegalArgumentException("Category already exists");
+        }
+        CategoryModel category = toEntity(request);
+        List<FeatureModel> features = featureRepository.findAllById(request.getFeature_ids());
+        category.setFeatures(features);
+        CategoryModel categorySaved = categoryRepository.save(category);
+        if(request.getImages() != null){
+            for(MultipartFile image : request.getImages()){
+                try {
+                    String filename = UUID.randomUUID() + ".jpg";
+                    FileUploadUtil.saveFile("/categories/", filename, image);
+
+                    CategoryImage categoryImageEntity = new CategoryImage();
+                    categoryImageEntity.setCategory(categorySaved);
+                    categoryImageEntity.setImage("/uploads/categories/" + filename);
+
+                    categoryImageRepository.save(categoryImageEntity);
+                    categorySaved.getImages().add(categoryImageEntity);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        categoryRepository.save(categorySaved);
+        return toResponse(categorySaved);
     }
 
     public Page<CategoryResponse> get(int page, int size){

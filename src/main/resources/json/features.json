@@ -1,0 +1,62 @@
+[
+  {
+    "name": "Free WiFi",
+    "icon": "wifi"
+  },
+  {
+    "name": "Air Conditioning",
+    "icon": "air-conditioner"
+  },
+  {
+    "name": "Flat Screen TV",
+    "icon": "tv"
+  },
+  {
+    "name": "Mini Bar",
+    "icon": "mini-bar"
+  },
+  {
+    "name": "Private Bathroom",
+    "icon": "bathroom"
+  },
+  {
+    "name": "Balcony",
+    "icon": "balcony"
+  },
+  {
+    "name": "Sea View",
+    "icon": "sea-view"
+  },
+  {
+    "name": "City View",
+    "icon": "city-view"
+  },
+  {
+    "name": "Breakfast Included",
+    "icon": "breakfast"
+  },
+  {
+    "name": "Room Service",
+    "icon": "room-service"
+  },
+  {
+    "name": "Work Desk",
+    "icon": "desk"
+  },
+  {
+    "name": "Hair Dryer",
+    "icon": "hair-dryer"
+  },
+  {
+    "name": "Safe Box",
+    "icon": "safe"
+  },
+  {
+    "name": "Bathtub",
+    "icon": "bathtub"
+  },
+  {
+    "name": "Coffee Maker",
+    "icon": "coffee"
+  }
+]

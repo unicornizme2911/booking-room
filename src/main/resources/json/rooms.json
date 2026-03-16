@@ -1,0 +1,36 @@
+[
+  {"roomNumber":"101","roomFloor":1,"status":"AVAILABLE","categoryId":"1"},
+  {"roomNumber":"102","roomFloor":1,"status":"AVAILABLE","categoryId":"1"},
+  {"roomNumber":"103","roomFloor":1,"status":"AVAILABLE","categoryId":"1"},
+  {"roomNumber":"104","roomFloor":1,"status":"AVAILABLE","categoryId":"1"},
+  {"roomNumber":"105","roomFloor":1,"status":"AVAILABLE","categoryId":"1"},
+  {"roomNumber":"106","roomFloor":1,"status":"AVAILABLE","categoryId":"1"},
+
+  {"roomNumber":"201","roomFloor":2,"status":"AVAILABLE","categoryId":"2"},
+  {"roomNumber":"202","roomFloor":2,"status":"AVAILABLE","categoryId":"2"},
+  {"roomNumber":"203","roomFloor":2,"status":"AVAILABLE","categoryId":"2"},
+  {"roomNumber":"204","roomFloor":2,"status":"AVAILABLE","categoryId":"2"},
+  {"roomNumber":"205","roomFloor":2,"status":"AVAILABLE","categoryId":"2"},
+  {"roomNumber":"206","roomFloor":2,"status":"AVAILABLE","categoryId":"2"},
+
+  {"roomNumber":"301","roomFloor":3,"status":"AVAILABLE","categoryId":"3"},
+  {"roomNumber":"302","roomFloor":3,"status":"AVAILABLE","categoryId":"3"},
+  {"roomNumber":"303","roomFloor":3,"status":"AVAILABLE","categoryId":"3"},
+  {"roomNumber":"304","roomFloor":3,"status":"AVAILABLE","categoryId":"3"},
+  {"roomNumber":"305","roomFloor":3,"status":"AVAILABLE","categoryId":"3"},
+  {"roomNumber":"306","roomFloor":3,"status":"AVAILABLE","categoryId":"3"},
+
+  {"roomNumber":"401","roomFloor":4,"status":"AVAILABLE","categoryId":"4"},
+  {"roomNumber":"402","roomFloor":4,"status":"AVAILABLE","categoryId":"4"},
+  {"roomNumber":"403","roomFloor":4,"status":"AVAILABLE","categoryId":"4"},
+  {"roomNumber":"404","roomFloor":4,"status":"AVAILABLE","categoryId":"4"},
+  {"roomNumber":"405","roomFloor":4,"status":"AVAILABLE","categoryId":"4"},
+  {"roomNumber":"406","roomFloor":4,"status":"AVAILABLE","categoryId":"4"},
+
+  {"roomNumber":"501","roomFloor":5,"status":"AVAILABLE","categoryId":"5"},
+  {"roomNumber":"502","roomFloor":5,"status":"AVAILABLE","categoryId":"5"},
+  {"roomNumber":"503","roomFloor":5,"status":"AVAILABLE","categoryId":"5"},
+  {"roomNumber":"504","roomFloor":5,"status":"AVAILABLE","categoryId":"5"},
+  {"roomNumber":"505","roomFloor":5,"status":"AVAILABLE","categoryId":"5"},
+  {"roomNumber":"506","roomFloor":5,"status":"AVAILABLE","categoryId":"5"}
+]

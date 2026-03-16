@@ -5,17 +5,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RoomResponse {
+public class FeatureResponse {
     private Long id;
-    private String roomNumber;
-    private int roomFloor;
-    private String status;
-    private String imagePath;
-    private CategoryResponse category;
+    private String name;
+    private String icon;
 }

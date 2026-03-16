@@ -1,31 +1,26 @@
 package com.booking.models;
-import lombok.*;
+
 import jakarta.persistence.*;
+import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import java.util.*;
 
 @Entity
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "invoices")
+@Table(name = "categorie_images")
 @Getter
 @Setter
 @EntityListeners(AuditingEntityListener.class)
-public class InvoiceModel {
+public class CategoryImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Date created_date;
+    @Column(nullable = false)
+    private String image;
 
-    private Double total;
-    
-    private String payment_method;
-
-    private String payment_status;
-
-    @OneToOne
-    @JoinColumn(name = "reservation_id", nullable = false)
-    private ReservationModel reservation;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private CategoryModel category;
 }

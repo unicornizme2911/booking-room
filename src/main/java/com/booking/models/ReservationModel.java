@@ -32,13 +32,8 @@ public class ReservationModel {
     @JoinColumn(name = "transport_id")
     private TransportModel transport;
 
-    @ManyToMany
-    @JoinTable(
-            name = "reservation_rooms",
-            joinColumns = @JoinColumn(name = "reservation_id"),
-            inverseJoinColumns = @JoinColumn(name = "room_id")
-    )
-    private List<RoomModel> rooms;
+    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL)
+    private List<ReservationRoom> reservation_rooms;
 
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReservationMeal> reservation_meals;

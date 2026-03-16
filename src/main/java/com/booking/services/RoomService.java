@@ -10,27 +10,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
-class RoomService {
+public class RoomService {
     @Autowired
     private RoomRepository roomRepository;
     @Autowired
     private CategoryRepository categoryRepository;
-//    @Autowired
-//    private ReservationService reservationService;
+    @Autowired
+    private CategoryService categoryService;
 
     public RoomResponse toResponse(RoomModel room) {
         return RoomResponse.builder()
                 .id(room.getId())
                 .roomNumber(room.getRoomNumber())
                 .roomFloor(room.getRoomFloor())
-                .price(room.getPrice())
                 .status(room.getStatus())
                 .imagePath(room.getImagePath())
-                .categoryName(room.getCategory().getName())
+                .category(categoryService.toResponse(room.getCategory()))
                 .build();
     }
 
@@ -43,33 +44,34 @@ class RoomService {
                 .id(request.getId())
                 .roomNumber(request.getRoomNumber())
                 .roomFloor(request.getRoomFloor())
-                .price(request.getPrice())
                 .status(request.getStatus())
                 .build();
     }
 
+    @Transactional
     public RoomResponse add(RoomRequest request) {
-        var room = roomRepository.findById(String.valueOf(request.getId())).orElse(null);
-        var category = categoryRepository.findById(request.getCategoryId()).orElse(null);
-        if(room == null && category != null){
-            var roomEntity = toEntity(request);
-            var roomSaved = roomRepository.save(roomEntity);
-            roomSaved.setCategory(category);
-            Long id = roomSaved.getId();
-            if(request.getImagePath() != null){
-                try{
-                    FileUploadUtil.saveFile("/rooms/",id +".jpg", request.getImagePath());
-                    roomSaved.setImagePath("/uploads/rooms/" + id +".jpg");
-                    category.getRooms().add(roomSaved);
-                    categoryRepository.save(category);
-                    roomRepository.save(roomSaved);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            return toResponse(roomSaved);
+        var room = roomRepository.findByRoomNumber(request.getRoomNumber());
+        var category = categoryRepository.findById(request.getCategoryId())
+                .orElseThrow(() -> new RuntimeException("Category not found"));
+
+        if (room != null) {
+            return update(request, room);
         }
-        return update(request, room);
+
+        var roomEntity = toEntity(request);
+        roomEntity.setCategory(category);
+        var roomSaved = roomRepository.save(roomEntity);
+        Long id = roomSaved.getId();
+        if(request.getImagePath() != null){
+            try{
+                FileUploadUtil.saveFile("/rooms/",id +".jpg", request.getImagePath());
+                roomSaved.setImagePath("/uploads/rooms/" + id +".jpg");
+                roomRepository.save(roomSaved);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return toResponse(roomSaved);
     }
 
     public Page<RoomResponse> get(int page, int size){
@@ -86,13 +88,19 @@ class RoomService {
         return toResponse(room);
     }
 
+    public List<RoomResponse> searchAvailableRooms(Date fromDate, Date toDate){
+        if(fromDate == null || toDate == null || fromDate.after(toDate)){
+            throw new RuntimeException("Invalid date range");
+        }
+        return toResponse(roomRepository.findAvailableRooms(fromDate, toDate));
+    }
+
     public RoomResponse update(String id, RoomRequest request){
         var room = roomRepository.findById(id).orElseThrow();
         var category = categoryRepository.findById(request.getCategoryId()).orElse(null);
 
         room.setRoomNumber(request.getRoomNumber());
         room.setRoomFloor(request.getRoomFloor());
-        room.setPrice(request.getPrice());
         room.setStatus(request.getStatus());
         if(category != null){
             room.setCategory(category);
@@ -119,7 +127,6 @@ class RoomService {
     public RoomResponse update(RoomRequest request, RoomModel room) {
         room.setRoomNumber(request.getRoomNumber());
         room.setRoomFloor(request.getRoomFloor());
-        room.setPrice(request.getPrice());
         room.setStatus(request.getStatus());
         roomRepository.save(room);
         return toResponse(room);
