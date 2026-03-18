@@ -5,7 +5,7 @@
   },
   {
     "name": "Air Conditioning",
-    "icon": "air-conditioner"
+    "icon": "fan"
   },
   {
     "name": "Flat Screen TV",
@@ -13,50 +13,50 @@
   },
   {
     "name": "Mini Bar",
-    "icon": "mini-bar"
+    "icon": "martini-glass"
   },
   {
     "name": "Private Bathroom",
-    "icon": "bathroom"
+    "icon": "shower"
   },
   {
     "name": "Balcony",
-    "icon": "balcony"
+    "icon": "stairs"
   },
   {
     "name": "Sea View",
-    "icon": "sea-view"
+    "icon": "umbrella-beach"
   },
   {
     "name": "City View",
-    "icon": "city-view"
+    "icon": "tree-city"
   },
   {
     "name": "Breakfast Included",
-    "icon": "breakfast"
+    "icon": "bread-slice"
   },
   {
     "name": "Room Service",
-    "icon": "room-service"
+    "icon": "person-shelter"
   },
   {
     "name": "Work Desk",
-    "icon": "desk"
+    "icon": "computer"
   },
   {
     "name": "Hair Dryer",
-    "icon": "hair-dryer"
+    "icon": "restroom"
   },
   {
     "name": "Safe Box",
-    "icon": "safe"
+    "icon": "shield"
   },
   {
     "name": "Bathtub",
-    "icon": "bathtub"
+    "icon": "bath"
   },
   {
     "name": "Coffee Maker",
-    "icon": "coffee"
+    "icon": "mug-saucer"
   }
 ]

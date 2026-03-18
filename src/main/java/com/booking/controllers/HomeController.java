@@ -1,5 +1,6 @@
 package com.booking.controllers;
 
+import com.booking.services.CategoryService;
 import com.booking.services.RoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 public class HomeController {
     private final RoomService roomService;
+    private final CategoryService categoryService;
 
     @GetMapping("/")
     public String home(){
@@ -20,7 +22,7 @@ public class HomeController {
 
     @GetMapping("/booking-rooms")
     public String bookingRooms(Model model){
-//        model.addAttribute("rooms", roomService.getAll());
+        model.addAttribute("categories", categoryService.getAll());
         return "pages/booking";
     }
 }

@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // State
     let checkinDate = new Date();
     checkinDate.setHours(0, 0, 0, 0);
 
@@ -7,11 +6,9 @@ document.addEventListener('DOMContentLoaded', function () {
     checkoutDate.setDate(checkoutDate.getDate() + 1);
     checkoutDate.setHours(0, 0, 0, 0);
 
-    // Current displayed months (left = current month, right = next month)
     let leftMonth = new Date(checkinDate.getFullYear(), checkinDate.getMonth(), 1);
     let rightMonth = new Date(checkinDate.getFullYear(), checkinDate.getMonth() + 1, 1);
 
-    // Selection mode: 'checkin' or 'checkout'
     let selectionMode = 'checkin';
 
     let guests = {
@@ -20,10 +17,8 @@ document.addEventListener('DOMContentLoaded', function () {
         children: 0
     };
 
-    let selectedRooms = [];
     let totalAmount = 0;
 
-    // DOM Elements
     const dateRangeWrapper = document.getElementById('dateRangeWrapper');
     const calendarDropdown = document.getElementById('calendarDropdown');
     const guestsWrapper = document.getElementById('guestsWrapper');
@@ -39,7 +34,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const totalAmountDisplay = document.getElementById('totalAmount');
     const dateRangeSummary = document.getElementById('dateRangeSummary');
 
-    // Calendar elements
     const calendarPrev = document.getElementById('calendarPrev');
     const calendarNext = document.getElementById('calendarNext');
     const leftMonthTitle = document.getElementById('leftMonthTitle');
@@ -47,16 +41,77 @@ document.addEventListener('DOMContentLoaded', function () {
     const leftMonthDays = document.getElementById('leftMonthDays');
     const rightMonthDays = document.getElementById('rightMonthDays');
 
-    // Guest counter elements
     const roomsCountDisplay = document.getElementById('roomsCount');
     const adultsCountDisplay = document.getElementById('adultsCount');
     const childrenCountDisplay = document.getElementById('childrenCount');
 
-    // Utility Functions
-    const months = ['January', 'February', 'March', 'April', 'May', 'June',
-        'July', 'August', 'September', 'October', 'November', 'December'];
     const shortMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+    const galleries = document.querySelectorAll(".category-gallery");
+
+    galleries.forEach(gallery => {
+        const prevBtn = gallery.querySelector('.gallery-arrow.prev');
+        const nextBtn = gallery.querySelector('.gallery-arrow.next');
+        const dotsContainer = gallery.querySelector('.gallery-nav');
+        const photoCount = gallery.querySelector('.photo-count');
+        const img = gallery.querySelector('.gallery-img');
+        const images = gallery.dataset.images?.split(",") || [];
+        if (images.length === 0) {
+            photoCount.style.display = 'none';
+        }
+        let currentIndex = 0;
+
+        function updateGallery() {
+            if (images.length > 0) {
+                img.src = images[currentIndex];
+                updateDots();
+                updatePhotoCount();
+            }
+        }
+
+        function updatePhotoCount() {
+            const countGallery = photoCount.querySelector('.count-gallery');
+            if (!countGallery) return;
+            countGallery.textContent = `${currentIndex+1}/${images.length}`;
+        }
+
+        function renderDots() {
+            dotsContainer.innerHTML = "";
+            images.forEach((_, index) => {
+                const dot = document.createElement("span");
+                dot.classList.add("gallery-dot");
+                if (index === currentIndex) dot.classList.add("active");
+                dot.addEventListener("click", () => {
+                    currentIndex = index;
+                    updateGallery();
+                });
+                dotsContainer.appendChild(dot);
+            });
+        }
+
+        function updateDots() {
+            const dots = dotsContainer.querySelectorAll(".gallery-dot");
+            dots.forEach((dot, i) => {
+                dot.classList.toggle("active", i === currentIndex);
+            });
+        }
+
+        nextBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            currentIndex = (currentIndex + 1) % images.length;
+            updateGallery();
+        });
+
+        prevBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            currentIndex = (currentIndex - 1 + images.length) % images.length;
+            updateGallery();
+        });
+
+        renderDots();
+        updateGallery();
+    })
 
     function formatDate(date) {
         return `${shortMonths[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
@@ -136,11 +191,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function updateTotalAmount() {
-        const nights = calculateNights();
-        totalAmount = selectedRooms.reduce((sum, room) => sum + (room.price * nights), 0);
-        if (totalAmountDisplay) {
-            totalAmountDisplay.textContent = formatCurrency(totalAmount);
-        }
+        // const nights = calculateNights();
+        // totalAmount = selectedRooms.reduce((sum, room) => sum + (room.price * nights), 0);
+        // if (totalAmountDisplay) {
+        //     totalAmountDisplay.textContent = formatCurrency(totalAmount);
+        // }
     }
 
     // Calendar Rendering - Monday-based weeks
@@ -219,7 +274,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function handleDateSelection(selectedDate) {
-        console.log('[v0] Date selected:', selectedDate, 'Mode:', selectionMode);
 
         if (selectionMode === 'checkin') {
             checkinDate = new Date(selectedDate);
@@ -287,7 +341,6 @@ document.addEventListener('DOMContentLoaded', function () {
             // Don't trigger if clicking on nav buttons or days
             if (e.target.closest('.nav-btn')) return;
             if (e.target.closest('.day')) return;
-
             if (calendarDropdown.classList.contains('show')) {
                 closeAllDropdowns();
             } else {
@@ -361,32 +414,8 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Room selection
-    document.querySelectorAll('.select-room-btn').forEach(btn => {
-        btn.addEventListener('click', function () {
-            const roomId = this.dataset.roomId;
-            const roomPrice = parseInt(this.dataset.roomPrice);
-
-            const roomIndex = selectedRooms.findIndex(r => r.id === roomId);
-
-            if (roomIndex > -1) {
-                // Deselect room
-                selectedRooms.splice(roomIndex, 1);
-                this.classList.remove('selected');
-                this.textContent = 'Select';
-            } else {
-                // Select room
-                selectedRooms.push({ id: roomId, price: roomPrice });
-                this.classList.add('selected');
-                this.textContent = 'Selected';
-            }
-
-            updateTotalAmount();
-        });
-    });
-
     // Search button
-    const searchBtn = document.getElementById('searchRooms');
+    const searchBtn = document.getElementById('searchCategories');
     if (searchBtn) {
         searchBtn.addEventListener('click', function () {
             const searchParams = {
@@ -399,7 +428,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Build query string
             const queryString = new URLSearchParams(searchParams).toString();
-
+            fetch(`/api/bookings/search/${queryString}`)
+                .then(res => res.json())
+                .then(data => data.json())
             // Redirect or AJAX call - uncomment this for actual use
             // window.location.href = `/booking/search?${queryString}`;
 

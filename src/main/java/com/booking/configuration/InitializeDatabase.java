@@ -81,11 +81,11 @@ public class InitializeDatabase {
 //                    new TypeReference<List<MealRequest>>(){},
 //                    mealService::add
 //            );
-            loadData(
-                    "/json/rooms.json",
-                    new TypeReference<List<RoomRequest>>(){},
-                    roomService::add
-            );
+//            loadData(
+//                    "/json/rooms.json",
+//                    new TypeReference<List<RoomRequest>>(){},
+//                    roomService::add
+//            );
 
         };
     }

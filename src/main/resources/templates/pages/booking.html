@@ -4,7 +4,7 @@
 <body>
 <div class="container-fluid position-relative m-0 p-0">
     <th:block th:insert="~{fragments/util/header :: header}"/>
-    <th:block th:insert="~{fragments/user/booking :: booking(rooms = ${rooms})}"/>
+    <th:block th:insert="~{fragments/user/booking :: booking(categories = ${categories})}"/>
 </div>
 <th:block th:insert="~{fragments/util/footer :: footer}"/>
 <th:block th:insert="~{fragments/scripts/scripts :: scripts}"/>

@@ -1,10 +1,10 @@
 <main th:fragment="booking" class="booking">
-        <link th:href="@{/css/user/booking.css}" rel="stylesheet"/>
+    <link th:href="@{/css/user/booking.css}" rel="stylesheet"/>
 
-        <!-- Hero Banner -->
-        <div class="booking-hero">
-            <img th:src="@{/images/hotel-banner.jpg}" alt="Hotel Pool View" class="hero-image"/>
-        </div>
+    <!-- Hero Banner -->
+    <div class="booking-hero">
+        <img th:src="@{/uploads/hotel-banner.jpg}" alt="Hotel Pool View" class="hero-image"/>
+    </div>
 
     <!-- Search Bar -->
     <div class="search-bar-container">
@@ -141,12 +141,12 @@
             </div>
 
             <!-- Search Button -->
-            <button type="button" class="search-btn" id="searchRooms">Search</button>
+            <button type="button" class="search-btn" id="searchCategories">Search</button>
         </div>
     </div>
 
     <!-- Main Content -->
-    <div class="booking-content">
+    <div class="main-content">
         <!-- Progress Stepper -->
         <div class="progress-stepper">
             <div class="step active">
@@ -172,7 +172,7 @@
 
         <!-- Hotel Header -->
         <div class="hotel-header">
-            <h1 class="hotel-name" th:text="${hotelName != null ? hotelName : 'The Hanoi Club Hotel & Residences'}">The Hanoi Club Hotel & Residences</h1>
+            <h1 class="hotel-name" th:text="${hotelName != null ? hotelName : 'The Hotel & Residences'}">The Hotel & Residences</h1>
             <div class="total-amount">
                 <span class="total-label">Total amount:</span>
                 <span class="total-value" id="totalAmount">0 VND</span>
@@ -182,120 +182,97 @@
         <div class="hotel-divider"></div>
 
         <!-- Room Listings -->
-        <div class="room-listings" id="roomListings">
+        <div class="category-grid" id="categoryGrid">
             <!-- Room Card - This would be rendered dynamically with Thymeleaf -->
-            <th:block th:each="room : ${rooms}">
-                <div class="room-card">
-                    <div class="room-image-container">
-                        <img th:src="${room.imageUrl}" th:alt="${room.name}" class="room-image"/>
-                    </div>
-                    <div class="room-details">
-                        <div class="room-info">
-                            <h3 class="room-package" th:text="${room.packageName}">HNC WEBSITE BF</h3>
-                            <h2 class="room-type" th:text="${room.typeName}">SUPERIOR TWIN</h2>
-                            <div class="room-specs">
-                                <span class="room-capacity">
-                                    <strong th:text="${room.maxGuests}">3</strong> people
-                                    (<span th:text="${room.maxAdults}">3</span> Adults,
-                                    <span th:text="${room.maxChildren}">1</span> Children)
-                                </span>
-                                <span class="spec-divider">|</span>
-                                <span class="room-size"><strong th:text="${room.size}">35</strong> m2</span>
-                            </div>
-                            <p class="room-description" th:text="${room.description}">SUPERIOR TWIN</p>
+            <th:block th:each="category : ${categories}">
+                <div class="category-card" th:data-category-id="${category.id}">
+                    <div class="category-gallery"
+                         th:data-category-id="${category.id}"
+                         th:data-images="${#strings.listJoin(category.images, ',')}"
+                    >
+                        <img class="gallery-img" src="../../../../uploads/categories/room-deluxe.jpg" alt="Image Room">
+                        <div class="gallery-arrows">
+                            <button class="gallery-arrow prev" aria-label="Previous image">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="15 18 9 12 15 6"/>
+                                </svg>
+                            </button>
+                            <button class="gallery-arrow next" aria-label="Next image">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="9 18 15 12 9 6"/>
+                                </svg>
+                            </button>
                         </div>
-                        <div class="room-pricing">
-                            <div class="price-info">
-                                <span class="price-amount" th:text="${#numbers.formatDecimal(room.price, 0, 'COMMA', 0, 'POINT')} + ' VND'">4,500,000 VND</span>
-                                <span class="price-period">Per night</span>
-                            </div>
-                            <button type="button" class="select-room-btn"
-                                    th:data-room-id="${room.id}"
-                                    th:data-room-price="${room.pricePerNight}">Select</button>
-                        </div>
+                        <div class="gallery-nav"></div>
+                        <span class="photo-count">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                                    <polyline points="21 15 16 10 5 21"/>
+                            </svg>
+                            <span class="count-gallery">1/3</span>
+                        </span>
                     </div>
-                </div>
-            </th:block>
 
-            <!-- Sample Static Room Cards (for demonstration when no Thymeleaf data) -->
-            <th:block th:if="${rooms == null or #lists.isEmpty(rooms)}">
-                <div class="room-card">
-                    <div class="room-image-container">
-                        <img src="/images/rooms/superior-twin.jpg" alt="Superior Twin Room" class="room-image"/>
-                    </div>
-                    <div class="room-details">
-                        <div class="room-info">
-                            <h3 class="room-package">HNC WEBSITE BF</h3>
-                            <h2 class="room-type">SUPERIOR TWIN</h2>
-                            <div class="room-specs">
-                                <span class="room-capacity">
-                                    <strong>3</strong> people (3 Adults, 1 Children)
-                                </span>
-                                <span class="spec-divider">|</span>
-                                <span class="room-size"><strong>35</strong> m2</span>
+                    <div class="category-details">
+                        <div class="category-info">
+                            <div>
+                                <h2 class="category-name" th:text="${category.name}">Category Name</h2>
+                                <div class="category-specs">
+                                    <span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                                                    <circle cx="9" cy="7" r="4"/>
+                                                    <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                        </svg>
+                                        <span th:text="'Up to ' + ${category.capacity} + ' guests'">Max 2 guests</span>
+                                    </span>
+                                    <span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M2 4v16"/>
+                                                    <path d="M2 8h18a2 2 0 0 1 2 2v10"/>
+                                                    <path d="M2 17h20"/>
+                                                    <path d="M6 8v9"/>
+                                                </svg>
+                                        <span th:text="${category.bed_type}">King Bed</span>
+                                    </span>
+                                    <span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                                        </svg>
+                                        <span th:text="${category.room_size} + ' m²'">35 m²</span>
+                                    </span>
+                                </div>
                             </div>
-                            <p class="room-description">SUPERIOR TWIN</p>
                         </div>
-                        <div class="room-pricing">
-                            <div class="price-info">
-                                <span class="price-amount">4,500,000 VND</span>
-                                <span class="price-period">Per night</span>
-                            </div>
-                            <button type="button" class="select-room-btn" data-room-id="1" data-room-price="4500000">Select</button>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="room-card">
-                    <div class="room-image-container">
-                        <img src="/images/rooms/deluxe-king.jpg" alt="Deluxe King Room" class="room-image"/>
-                    </div>
-                    <div class="room-details">
-                        <div class="room-info">
-                            <h3 class="room-package">HNC WEBSITE BF</h3>
-                            <h2 class="room-type">DELUXE KING</h2>
-                            <div class="room-specs">
-                                <span class="room-capacity">
-                                    <strong>2</strong> people (2 Adults, 0 Children)
+                        <div class="category-features">
+                            <th:block th:each="feature, iterStat : ${category.features}">
+                                <span class="feature" th:if="${iterStat.index < 4}">
+                                    <i class="fa" th:classappend="'fa-' + ${feature.icon}"></i>
+                                    <span th:text="${feature.name}">Feature</span>
                                 </span>
-                                <span class="spec-divider">|</span>
-                                <span class="room-size"><strong>40</strong> m2</span>
-                            </div>
-                            <p class="room-description">DELUXE KING</p>
+                            </th:block>
+                            <span class="feature-more" th:if="${#lists.size(category.features) > 4}" th:text="'+' + (${#lists.size(category.features)} - 4) + ' more'">+3 more</span>
                         </div>
-                        <div class="room-pricing">
+                        <div class="category-pricing">
                             <div class="price-info">
-                                <span class="price-amount">5,200,000 VND</span>
+                                <span class="price-amount" th:text="${#numbers.formatDecimal(category.price, 0, 'COMMA', 0, 'POINT')} + ' VND'">4,500,000 VND</span>
                                 <span class="price-period">Per night</span>
+                                <span class="price-total">For total</span>
                             </div>
-                            <button type="button" class="select-room-btn" data-room-id="2" data-room-price="5200000">Select</button>
                         </div>
-                    </div>
-                </div>
-
-                <div class="room-card">
-                    <div class="room-image-container">
-                        <img src="/images/rooms/suite.jpg" alt="Executive Suite" class="room-image"/>
-                    </div>
-                    <div class="room-details">
-                        <div class="room-info">
-                            <h3 class="room-package">HNC WEBSITE BF</h3>
-                            <h2 class="room-type">EXECUTIVE SUITE</h2>
-                            <div class="room-specs">
-                                <span class="room-capacity">
-                                    <strong>4</strong> people (4 Adults, 2 Children)
-                                </span>
-                                <span class="spec-divider">|</span>
-                                <span class="room-size"><strong>65</strong> m2</span>
-                            </div>
-                            <p class="room-description">EXECUTIVE SUITE</p>
-                        </div>
-                        <div class="room-pricing">
-                            <div class="price-info">
-                                <span class="price-amount">8,000,000 VND</span>
-                                <span class="price-period">Per night</span>
-                            </div>
-                            <button type="button" class="select-room-btn" data-room-id="3" data-room-price="8000000">Select</button>
+                        <div class="category-actions">
+                            <button class="btn-details" onclick="openRoomDetails('deluxe-king')">View</button>
+                            <button class="btn-select" onclick="selectRoom(this)" data-selected-price="189">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="9" cy="21" r="1"/>
+                                    <circle cx="20" cy="21" r="1"/>
+                                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                                </svg>
+                                Select Room
+                            </button>
                         </div>
                     </div>
                 </div>

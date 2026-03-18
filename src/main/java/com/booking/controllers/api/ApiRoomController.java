@@ -29,9 +29,9 @@ public class ApiRoomController {
 
     @PostMapping("/available")
     public ResponseEntity<List<RoomResponse>> available(
-            @RequestBody Date fromDate,
-            @RequestBody Date toDate
+            @RequestParam String fromDate,
+            @RequestParam String toDate
     ){
-        return ResponseEntity.ok().body(roomService.searchAvailableRooms(fromDate, toDate));
+        return ResponseEntity.ok().body(roomService.searchAvailableRooms(new Date(fromDate), new Date(toDate)));
     }
 }

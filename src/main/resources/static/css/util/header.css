@@ -22,3 +22,8 @@
 .header__icons .navbar-nav .nav-link:hover {
     opacity: .5;
 }
+
+.header__logo {
+    width: 3em;
+    border-radius: 1rem;
+}

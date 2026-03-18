@@ -1,6 +1,7 @@
 package com.booking.services;
 
 import com.booking.dto.request.CategoryRequest;
+import com.booking.dto.response.CategoryAvailableResponse;
 import com.booking.dto.response.CategoryResponse;
 import com.booking.models.CategoryImage;
 import com.booking.models.CategoryModel;
@@ -16,6 +17,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -45,6 +48,12 @@ public class CategoryService {
                         category.getImages().stream().map(CategoryImage::getImage).toList())
                 .features(category.getFeatures() == null ? null : featureService.toResponse(category.getFeatures()))
                 .build();
+    }
+
+    public CategoryResponse toResponse(CategoryModel category, Long room_available){
+        CategoryResponse categoryResponse = toResponse(category);
+        categoryResponse.setAvailable_rooms(room_available);
+        return categoryResponse;
     }
 
     public List<CategoryResponse> toResponse(List<CategoryModel> category){
@@ -90,6 +99,22 @@ public class CategoryService {
         }
         categoryRepository.save(categorySaved);
         return toResponse(categorySaved);
+    }
+
+    public List<CategoryResponse> availableRooms(Date fromDate, Date toDate, int rooms, int adults, int children){
+        var guests = children + adults;
+        if(fromDate == null || toDate == null || fromDate.after(toDate) || guests <= 0 || rooms <= 0){
+            throw new RuntimeException("Invalid date range");
+        }
+        List<CategoryAvailableResponse> categories = categoryRepository.countRoomAvailable(fromDate, toDate, guests);
+        List<CategoryResponse> responses = new ArrayList<>();
+        categories.forEach(c -> {
+            CategoryModel category = categoryRepository.findById(String.valueOf(c.getId())).orElseThrow();
+            if (c.getAvailable_rooms() >= rooms) {
+                responses.add(toResponse(category,c.getAvailable_rooms()));
+            }
+        });
+        return responses;
     }
 
     public Page<CategoryResponse> get(int page, int size){

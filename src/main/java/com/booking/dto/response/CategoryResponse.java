@@ -26,4 +26,5 @@ public class CategoryResponse {
     private int room_size;
     private List<String> images;
     private List<FeatureResponse> features;
+    private Long available_rooms;
 }
