@@ -48,70 +48,72 @@ document.addEventListener('DOMContentLoaded', function () {
     const shortMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-    const galleries = document.querySelectorAll(".category-gallery");
+    function initGallery() {
+        const galleries = document.querySelectorAll(".category-gallery");
 
-    galleries.forEach(gallery => {
-        const prevBtn = gallery.querySelector('.gallery-arrow.prev');
-        const nextBtn = gallery.querySelector('.gallery-arrow.next');
-        const dotsContainer = gallery.querySelector('.gallery-nav');
-        const photoCount = gallery.querySelector('.photo-count');
-        const img = gallery.querySelector('.gallery-img');
-        const images = gallery.dataset.images?.split(",") || [];
-        if (images.length === 0) {
-            photoCount.style.display = 'none';
-        }
-        let currentIndex = 0;
-
-        function updateGallery() {
-            if (images.length > 0) {
-                img.src = images[currentIndex];
-                updateDots();
-                updatePhotoCount();
+        galleries.forEach(gallery => {
+            const prevBtn = gallery.querySelector('.gallery-arrow.prev');
+            const nextBtn = gallery.querySelector('.gallery-arrow.next');
+            const dotsContainer = gallery.querySelector('.gallery-nav');
+            const photoCount = gallery.querySelector('.photo-count');
+            const img = gallery.querySelector('.gallery-img');
+            const images = gallery.dataset.images?.split(",") || [];
+            if (images.length === 0) {
+                photoCount.style.display = 'none';
             }
-        }
+            let currentIndex = 0;
 
-        function updatePhotoCount() {
-            const countGallery = photoCount.querySelector('.count-gallery');
-            if (!countGallery) return;
-            countGallery.textContent = `${currentIndex+1}/${images.length}`;
-        }
+            function updateGallery() {
+                if (images.length > 0) {
+                    img.src = images[currentIndex];
+                    updateDots();
+                    updatePhotoCount();
+                }
+            }
 
-        function renderDots() {
-            dotsContainer.innerHTML = "";
-            images.forEach((_, index) => {
-                const dot = document.createElement("span");
-                dot.classList.add("gallery-dot");
-                if (index === currentIndex) dot.classList.add("active");
-                dot.addEventListener("click", () => {
-                    currentIndex = index;
-                    updateGallery();
+            function updatePhotoCount() {
+                const countGallery = photoCount.querySelector('.count-gallery');
+                if (!countGallery) return;
+                countGallery.textContent = `${currentIndex+1}/${images.length}`;
+            }
+
+            function renderDots() {
+                dotsContainer.innerHTML = "";
+                images.forEach((_, index) => {
+                    const dot = document.createElement("span");
+                    dot.classList.add("gallery-dot");
+                    if (index === currentIndex) dot.classList.add("active");
+                    dot.addEventListener("click", () => {
+                        currentIndex = index;
+                        updateGallery();
+                    });
+                    dotsContainer.appendChild(dot);
                 });
-                dotsContainer.appendChild(dot);
+            }
+
+            function updateDots() {
+                const dots = dotsContainer.querySelectorAll(".gallery-dot");
+                dots.forEach((dot, i) => {
+                    dot.classList.toggle("active", i === currentIndex);
+                });
+            }
+
+            nextBtn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                currentIndex = (currentIndex + 1) % images.length;
+                updateGallery();
             });
-        }
 
-        function updateDots() {
-            const dots = dotsContainer.querySelectorAll(".gallery-dot");
-            dots.forEach((dot, i) => {
-                dot.classList.toggle("active", i === currentIndex);
+            prevBtn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                currentIndex = (currentIndex - 1 + images.length) % images.length;
+                updateGallery();
             });
-        }
 
-        nextBtn.addEventListener("click", (e) => {
-            e.stopPropagation();
-            currentIndex = (currentIndex + 1) % images.length;
+            renderDots();
             updateGallery();
-        });
-
-        prevBtn.addEventListener("click", (e) => {
-            e.stopPropagation();
-            currentIndex = (currentIndex - 1 + images.length) % images.length;
-            updateGallery();
-        });
-
-        renderDots();
-        updateGallery();
-    })
+        })
+    }
 
     function formatDate(date) {
         return `${shortMonths[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
@@ -191,11 +193,14 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function updateTotalAmount() {
-        // const nights = calculateNights();
-        // totalAmount = selectedRooms.reduce((sum, room) => sum + (room.price * nights), 0);
-        // if (totalAmountDisplay) {
-        //     totalAmountDisplay.textContent = formatCurrency(totalAmount);
-        // }
+        console.log(bookingState);
+        const nights = calculateNights();
+        totalAmount = Object.values(bookingState).reduce((total, booking) => {
+            return total + (booking.rooms * booking.price * nights);
+        },0);
+        if (totalAmountDisplay) {
+            totalAmountDisplay.textContent = formatCurrency(totalAmount);
+        }
     }
 
     // Calendar Rendering - Monday-based weeks
@@ -277,19 +282,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (selectionMode === 'checkin') {
             checkinDate = new Date(selectedDate);
-
-            // If checkout is before or equal to new checkin, adjust checkout
             if (checkoutDate <= checkinDate) {
                 checkoutDate = new Date(checkinDate);
                 checkoutDate.setDate(checkoutDate.getDate() + 1);
             }
 
-            // Switch to checkout mode
             selectionMode = 'checkout';
         } else {
-            // Checkout selection
             if (selectedDate <= checkinDate) {
-                // If selected date is before checkin, make it new checkin
                 checkinDate = new Date(selectedDate);
                 checkoutDate = new Date(checkinDate);
                 checkoutDate.setDate(checkoutDate.getDate() + 1);
@@ -297,7 +297,6 @@ document.addEventListener('DOMContentLoaded', function () {
             } else {
                 checkoutDate = new Date(selectedDate);
                 selectionMode = 'checkin';
-                // Close dropdown after selecting checkout
                 closeAllDropdowns();
             }
         }
@@ -315,11 +314,10 @@ document.addEventListener('DOMContentLoaded', function () {
         renderCalendar(rightMonthDays, rightMonth);
     }
 
-    // Dropdown Controls
     function closeAllDropdowns() {
         if (calendarDropdown) calendarDropdown.classList.remove('show');
         if (guestsDropdown) guestsDropdown.classList.remove('show');
-        selectionMode = 'checkin'; // Reset selection mode
+        selectionMode = 'checkin';
     }
 
     function showCalendarDropdown() {
@@ -333,12 +331,17 @@ document.addEventListener('DOMContentLoaded', function () {
         guestsDropdown.classList.add('show');
     }
 
-    // Event Listeners
+    function showLoading(container) {
+        container.innerHTML = `
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>Loading rooms...</p>
+            </div>
+        `;
+    }
 
-    // Date range picker click
     if (dateRangeWrapper) {
         dateRangeWrapper.addEventListener('click', function (e) {
-            // Don't trigger if clicking on nav buttons or days
             if (e.target.closest('.nav-btn')) return;
             if (e.target.closest('.day')) return;
             if (calendarDropdown.classList.contains('show')) {
@@ -349,7 +352,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Calendar navigation
     if (calendarPrev) {
         calendarPrev.addEventListener('click', function (e) {
             e.stopPropagation();
@@ -368,7 +370,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Guests selector
     if (guestsWrapper) {
         guestsWrapper.addEventListener('click', function (e) {
             if (e.target.closest('.counter-btn')) return;
@@ -382,7 +383,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Guest counter buttons
     document.querySelectorAll('.counter-btn').forEach(btn => {
         btn.addEventListener('click', function (e) {
             e.stopPropagation();
@@ -405,7 +405,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Apply guests button
     const applyGuestsBtn = document.getElementById('applyGuests');
     if (applyGuestsBtn) {
         applyGuestsBtn.addEventListener('click', function (e) {
@@ -414,56 +413,86 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Search button
     const searchBtn = document.getElementById('searchCategories');
     if (searchBtn) {
         searchBtn.addEventListener('click', function () {
-            const searchParams = {
-                checkin: checkinDate.toISOString().split('T')[0],
-                checkout: checkoutDate.toISOString().split('T')[0],
-                rooms: guests.rooms,
-                adults: guests.adults,
-                children: guests.children
-            };
-
-            // Build query string
-            const queryString = new URLSearchParams(searchParams).toString();
-            fetch(`/api/bookings/search/${queryString}`)
-                .then(res => res.json())
-                .then(data => data.json())
-            // Redirect or AJAX call - uncomment this for actual use
-            // window.location.href = `/booking/search?${queryString}`;
-
-            // For now, just show an alert
-            alert(`Searching for rooms:\nCheck-in: ${formatDate(checkinDate)}\nCheck-out: ${formatDate(checkoutDate)}\nRooms: ${guests.rooms}\nAdults: ${guests.adults}\nChildren: ${guests.children}`);
+            const checkin = checkinDate.toISOString().split('T')[0];
+            const checkout = checkoutDate.toISOString().split('T')[0];
+            const container = document.querySelector('.category-container');
+            if (!container) return;
+            showLoading(container);
+            fetch(`/booking/search?fromDate=${checkin}&toDate=${checkout}&rooms=${guests.rooms}&adults=${guests.adults}&children=${guests.children}`, {
+                method: 'GET'
+            })
+                .then(res => res.text())
+                .then(html => {
+                    container.innerHTML = html;
+                    initGallery();
+                });
         });
     }
 
-    // Overlay click to close
     if (dropdownOverlay) {
         dropdownOverlay.addEventListener('click', function () {
             closeAllDropdowns();
         });
     }
+    let bookingState = {};
 
-    // Close dropdowns when clicking outside
+    function selectRoom(categoryId, rooms, price, btn) {
+        bookingState[categoryId] = {
+            rooms,
+            price
+        };
+        btn.innerText = `${rooms} room(s) selected`;
+        updateTotalAmount();
+    }
+
     document.addEventListener('click', function (e) {
         if (!e.target.closest('.date-range-picker') &&
             !e.target.closest('.guests-wrapper') &&
             !e.target.closest('.calendar-dropdown') &&
-            !e.target.closest('.guests-dropdown')) {
+            !e.target.closest('.guests-dropdown')
+        ) {
             closeAllDropdowns();
+        }
+        if (e.target.closest('.btn-select')){
+            const btn = e.target.closest('.btn-select');
+            const container = btn.closest(".category-actions");
+            const dropdown = container.querySelector(".room-dropdown");
+
+            const available = parseInt(btn.dataset.available);
+            const categoryId = btn.dataset.categoryId;
+            const price = parseFloat(btn.dataset.price);
+
+            document.querySelectorAll(".room-dropdown").forEach(d => d.classList.add("hidden"));
+            dropdown.classList.toggle("hidden");
+
+            dropdown.innerHTML = "";
+
+            for (let i = 1; i <= available; i++) {
+                const div = document.createElement("div");
+                div.className = "room-item";
+                div.innerText = `${i} room(s)`;
+
+                div.onclick = () => {
+                    selectRoom(categoryId, i, price, btn);
+                    dropdown.classList.add("hidden");
+                };
+                dropdown.appendChild(div);
+            }
+        } else {
+            document.querySelectorAll(".room-dropdown").forEach(d => d.classList.add("hidden"));
         }
     });
 
-    // Keyboard navigation
     document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') {
             closeAllDropdowns();
         }
     });
 
-    // Initialize
+    initGallery();
     updateDateDisplays();
     updateGuestsDisplay();
     updateTotalAmount();
