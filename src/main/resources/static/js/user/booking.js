@@ -19,6 +19,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let totalAmount = 0;
 
+    let bookingState = {};
+
     const dateRangeWrapper = document.getElementById('dateRangeWrapper');
     const calendarDropdown = document.getElementById('calendarDropdown');
     const guestsWrapper = document.getElementById('guestsWrapper');
@@ -31,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const checkoutDayDisplay = document.getElementById('checkoutDay');
     const nightsCountDisplay = document.getElementById('nightsCount');
     const guestsDisplay = document.getElementById('guestsDisplay');
-    const totalAmountDisplay = document.getElementById('totalAmount');
+    let totalAmountDisplay = document.getElementById('totalAmount');
     const dateRangeSummary = document.getElementById('dateRangeSummary');
 
     const calendarPrev = document.getElementById('calendarPrev');
@@ -193,14 +195,32 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function updateTotalAmount() {
-        console.log(bookingState);
         const nights = calculateNights();
         totalAmount = Object.values(bookingState).reduce((total, booking) => {
             return total + (booking.rooms * booking.price * nights);
         },0);
-        if (totalAmountDisplay) {
-            totalAmountDisplay.textContent = formatCurrency(totalAmount);
+        totalAmountDisplay.innerText = formatCurrency(totalAmount);
+        const reserveBtn = document.querySelector('.reserve-btn');
+        if (totalAmount > 0) {
+            reserveBtn.classList.remove('hidden');
+        } else {
+            reserveBtn.classList.add('hidden');
         }
+    }
+
+    function selectRoom(categoryId, rooms, price, btn) {
+        bookingState[categoryId] = {
+            rooms,
+            price
+        };
+        btn.innerText = `${rooms} room(s) selected`;
+        updateTotalAmount();
+    }
+
+    function removeRoom(categoryId, btn) {
+        delete bookingState[categoryId];
+        btn.innerText = "Select Room";
+        updateTotalAmount();
     }
 
     // Calendar Rendering - Monday-based weeks
@@ -400,7 +420,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     guests[type]--;
                 }
             }
-
             updateGuestsDisplay();
         });
     });
@@ -427,6 +446,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(res => res.text())
                 .then(html => {
                     container.innerHTML = html;
+                    totalAmountDisplay = document.getElementById('totalAmount');
                     initGallery();
                 });
         });
@@ -436,16 +456,6 @@ document.addEventListener('DOMContentLoaded', function () {
         dropdownOverlay.addEventListener('click', function () {
             closeAllDropdowns();
         });
-    }
-    let bookingState = {};
-
-    function selectRoom(categoryId, rooms, price, btn) {
-        bookingState[categoryId] = {
-            rooms,
-            price
-        };
-        btn.innerText = `${rooms} room(s) selected`;
-        updateTotalAmount();
     }
 
     document.addEventListener('click', function (e) {
@@ -470,9 +480,25 @@ document.addEventListener('DOMContentLoaded', function () {
 
             dropdown.innerHTML = "";
 
+            if (bookingState[categoryId]) {
+                const removeDiv = document.createElement('div');
+                removeDiv.className = "room-item remove";
+                removeDiv.innerText = "Remove Selection";
+                removeDiv.onclick = () => {
+                    removeRoom(categoryId, btn);
+                    dropdown.classList.add("hidden");
+                }
+                dropdown.appendChild(removeDiv);
+            }
+
             for (let i = 1; i <= available; i++) {
                 const div = document.createElement("div");
                 div.className = "room-item";
+
+                if (bookingState[categoryId]?.rooms === i) {
+                    div.classList.add("active");
+                }
+
                 div.innerText = `${i} room(s)`;
 
                 div.onclick = () => {
@@ -484,6 +510,10 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
             document.querySelectorAll(".room-dropdown").forEach(d => d.classList.add("hidden"));
         }
+    });
+
+    document.getElementById('reserveBtn').addEventListener('click', function (e) {
+        console.log("Booking data:" + bookingState);
     });
 
     document.addEventListener('keydown', function (e) {
