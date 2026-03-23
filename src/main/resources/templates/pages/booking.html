@@ -4,7 +4,17 @@
 <body>
 <div class="container-fluid position-relative m-0 p-0">
     <th:block th:insert="~{fragments/util/header :: header}"/>
-    <th:block th:insert="~{fragments/user/booking :: booking(categories = ${categories})}"/>
+    <th:block th:insert="~{fragments/user/booking :: bookingHeader}"/>
+    <div th:switch="${step}" class="booking-steps">
+        <th:block th:case="1">
+            <th:block th:replace="~{fragments/user/category-available :: categoryList}"></th:block>
+        </th:block>
+
+        <th:block th:case="2">
+            <th:block th:replace="~{fragments/user/booking-review :: review}"></th:block>
+        </th:block>
+
+    </div>
 </div>
 <th:block th:insert="~{fragments/util/footer :: footer}"/>
 <th:block th:insert="~{fragments/scripts/scripts :: scripts}"/>

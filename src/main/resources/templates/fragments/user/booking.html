@@ -1,4 +1,4 @@
-<main th:fragment="booking" class="booking">
+<main th:fragment="bookingHeader" class="booking">
     <link th:href="@{/css/user/booking.css}" rel="stylesheet"/>
 
     <!-- Hero Banner -->
@@ -145,10 +145,25 @@
         </div>
     </div>
 
-    <!-- Main Content -->
-    <div class="main-content">
-        <div class="category-container">
-            <th:block th:replace="fragments/user/categoryavailable :: categoryList"></th:block>
+    <div class="progress-stepper">
+        <div class="step" th:classappend="${step == 1 ? 'active' : ''}">
+            <span class="step-number">1</span>
+            <span class="step-label">Find a Room</span>
+        </div>
+        <div class="step-line" th:classappend="${step == 2 ? 'active' : ''}"></div>
+        <div class="step">
+            <span class="step-number">2</span>
+            <span class="step-label">Review</span>
+        </div>
+        <div class="step-line" th:classappend="${step == 3 ? 'active' : ''}"></div>
+        <div class="step">
+            <span class="step-number">3</span>
+            <span class="step-label">Payment</span>
+        </div>
+        <div class="step-line" th:classappend="${step == 4 ? 'active' : ''}"></div>
+        <div class="step">
+            <span class="step-number">4</span>
+            <span class="step-label">Complete</span>
         </div>
     </div>
     <!-- Overlay -->

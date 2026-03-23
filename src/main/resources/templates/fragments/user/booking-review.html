@@ -1,0 +1,435 @@
+<th:block th:fragment="review">
+    <div class="main-content">
+        <!-- ── Booker Information Header Band ── -->
+        <div class="booker-band">
+            <h2 class="booker-band__title">Booker information</h2>
+        </div>
+
+        <!-- ── Main Two-Column Layout ── -->
+        <!--
+          th:action="${@{/booking/review}}" th:object="${bookingForm}"
+          In a real Thymeleaf form, wrap left column in <form>
+        -->
+        <div class="page-layout">
+
+            <!-- ════════════════════════════════
+                 LEFT COLUMN
+            ════════════════════════════════ -->
+            <div class="page-layout__left">
+
+                <!-- Booker Form -->
+                <!-- th:object="${booker}" for Spring MVC binding -->
+                <form id="booking-form" th:action="@{/booking/payment}" th:object="${bookingForm}" method="post">
+
+                    <!-- First and last name -->
+                    <div class="section-block mt16">
+                        <label class="form-label" for="booker-name">
+                            First and last name<span class="req-asterisk">*</span>
+                        </label>
+                        <input
+                                class="form-input"
+                                type="text"
+                                id="booker-name"
+                                name="bookerName"
+                                placeholder="First and last name"
+                                th:field="*{bookerName}"
+                                autocomplete="name"
+                        />
+                    </div>
+
+                    <!-- Email -->
+                    <div class="section-block">
+                        <label class="form-label" for="booker-email">
+                            Email<span class="req-asterisk">*</span>
+                        </label>
+                        <input
+                                class="form-input"
+                                type="email"
+                                id="booker-email"
+                                name="bookerEmail"
+                                placeholder="Email"
+                                th:field="*{bookerEmail}"
+                                autocomplete="email"
+                        />
+                    </div>
+
+                    <!-- Phone + Country -->
+                    <div class="section-block">
+                        <div class="phone-country-labels">
+                            <span class="phone-label">Phone number<span class="req-asterisk">*</span></span>
+                            <span class="country-label">Country</span>
+                        </div>
+                        <div class="phone-country-row">
+                            <!-- Phone prefix -->
+                            <div class="phone-prefix">+84</div>
+                            <!-- Phone number input -->
+                            <div class="phone-field-wrap">
+                                <input
+                                        class="form-input"
+                                        type="tel"
+                                        name="bookerPhone"
+                                        placeholder="Phone number"
+                                        th:field="*{bookerPhone}"
+                                        autocomplete="tel"
+                                />
+                            </div>
+                            <!-- Country -->
+                            <div class="country-field-wrap">
+                                <input
+                                        class="form-input"
+                                        type="text"
+                                        name="bookerCountry"
+                                        placeholder="Country"
+                                        th:field="*{bookerCountry}"
+                                        th:value="${booker != null ? booker.country : 'Vietnam'}"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ── Room Detail Header ── -->
+                    <div class="room-detail-header mt8">
+                        <div class="room-detail-header__left">
+                            <span class="room-detail-header__title">Room detail</span>
+                            <span class="room-detail-header__note">
+                    Please complete the guest details for
+                    <a href="#" style="color:#A9A9B5; text-decoration:underline;">all rooms.</a>
+                  </span>
+                        </div>
+                        <button type="button" class="room-detail-header__right" id="hide-room-details">
+                            <span class="toggle-label">Hide details</span>
+                            <!-- Up arrow icon -->
+                            <img
+                                    src="https://static.codia.ai/s/image_cf3ec9e7-d88c-4f61-b404-d7e231d676ed.png"
+                                    alt="Toggle"
+                                    width="7" height="5"
+                                    style="object-fit:contain;"
+                            />
+                        </button>
+                    </div>
+
+                    <!-- Room detail content (tabs + guest forms) -->
+                    <div id="room-detail-content">
+
+                        <!-- Room Tabs -->
+                        <!--
+                          th:each="room, stat : ${rooms}"
+                          Dynamically render tabs for each room
+                        -->
+                        <div class="room-tabs">
+                            <!-- Active tab (Room 1) -->
+                            <button type="button" class="room-tab room-tab--active" data-room="1">Room 1</button>
+                            <!-- Inactive tabs – in Thymeleaf: th:each -->
+                            <button type="button" class="room-tab" data-room="2">Room 2</button>
+                            <button type="button" class="room-tab" data-room="3">Room 3</button>
+                            <button type="button" class="room-tab" data-room="4">Room 4</button>
+                        </div>
+
+                        <!-- Guest Form Panel (one per room; hidden via JS tabs) -->
+                        <!--
+                          In Thymeleaf: th:each="room, stat : ${rooms}"
+                          th:id="'guest-panel-' + ${stat.index}"
+                        -->
+                        <div id="guest-panel-0" class="guest-panel">
+
+                            <!-- Guest / I'm guest row -->
+                            <div class="guest-header">
+                                <span class="guest-header__label">Guest</span>
+                                <div class="guest-header__checkbox-wrap">
+                                    <input type="checkbox" id="im-guest" name="imGuest" />
+                                    <label for="im-guest" class="guest-header__checkbox-label">I'm guest</label>
+                                </div>
+                            </div>
+
+                            <!-- Guest first and last name -->
+                            <div class="section-block mt8">
+                                <label class="form-label form-label--red" for="guest-name">
+                                    First and last name<span class="req-asterisk">*</span>
+                                </label>
+                                <input
+                                        class="form-input"
+                                        type="text"
+                                        id="guest-name"
+                                        name="guestName"
+                                        placeholder="First and last name"
+                                        th:field="*{rooms[0].guestName}"
+                                />
+                            </div>
+
+                            <!-- Guest email -->
+                            <div class="section-block">
+                                <label class="form-label form-label--red" for="guest-email">
+                                    Email<span class="req-asterisk">*</span>
+                                </label>
+                                <input
+                                        class="form-input"
+                                        type="email"
+                                        id="guest-email"
+                                        name="guestEmail"
+                                        placeholder="Email"
+                                        th:field="*{rooms[0].guestEmail}"
+                                />
+                            </div>
+
+                            <!-- Guest phone + country -->
+                            <div class="section-block">
+                                <div class="phone-country-labels">
+                                    <span class="phone-label">Phone number<span class="req-asterisk">*</span></span>
+                                    <span class="country-label">Country</span>
+                                </div>
+                                <div class="phone-country-row">
+                                    <div class="phone-prefix">+84</div>
+                                    <div class="phone-field-wrap">
+                                        <input
+                                                class="form-input"
+                                                type="tel"
+                                                name="guestPhone"
+                                                placeholder="Phone number"
+                                                th:field="*{rooms[0].guestPhone}"
+                                        />
+                                    </div>
+                                    <div class="country-field-wrap">
+                                        <input
+                                                class="form-input"
+                                                type="text"
+                                                name="guestCountry"
+                                                placeholder="Country"
+                                                th:field="*{rooms[0].guestCountry}"
+                                                value="Vietnam"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Add guest button -->
+                            <button type="button" class="add-guest-btn">
+                                <img
+                                        src="https://static.codia.ai/s/image_b44e0559-988d-4fde-80ae-7bcba7df301c.png"
+                                        alt="Add"
+                                        class="add-guest-btn__icon"
+                                />
+                                Add guest
+                            </button>
+
+                        </div>
+                        <!-- /guest-panel-0 -->
+
+                    </div>
+                    <!-- /room-detail-content -->
+
+                    <!-- ── Special Request ── -->
+                    <section class="special-request mt16">
+                        <div class="special-request__header">
+                            <h3 class="special-request__title">Special request</h3>
+                            <button type="button" class="special-request__toggle" id="hide-special-request">
+                                <span class="toggle-label">Hide details</span>
+                                <img
+                                        src="https://static.codia.ai/s/image_cf3ec9e7-d88c-4f61-b404-d7e231d676ed.png"
+                                        alt="Toggle"
+                                        width="7" height="5"
+                                        style="object-fit:contain;"
+                                />
+                            </button>
+                        </div>
+                        <div class="special-request__body" id="special-request-body">
+                  <textarea
+                          class="special-request__textarea"
+                          name="specialRequest"
+                          th:field="*{specialRequest}"
+                          placeholder="Special requests cannot be guaranteed but we will do our best to accommodate.&#10;Please write your requests in English or Thai (optional)"
+                  ></textarea>
+                        </div>
+                    </section>
+
+                </form>
+                <!-- /booking-form -->
+
+            </div>
+            <!-- /page-layout__left -->
+
+            <!-- ════════════════════════════════
+                 RIGHT COLUMN – Summary Panel
+            ════════════════════════════════ -->
+            <aside class="page-layout__right right-panel">
+
+                <!-- Hotel image -->
+                <div class="hotel-image-wrap">
+                    <!--
+                      th:src="${hotel.imageUrl}"
+                      th:alt="${hotel.name}"
+                    -->
+                    <img
+                            class="hotel-img"
+                            src="https://static.codia.ai/s/image_8864598c-057f-45c9-9cf2-2db52c9927d9.png"
+                            alt="The Hanoi Club Hotel and Residences"
+                    />
+                    <span class="hotel-image-wrap__name"
+                          th:text="${hotelName != null ? hotelName : 'The Hanoi Club Hotel &amp; Residences'}">
+                The Hanoi Club Hotel &amp; Residences
+              </span>
+                </div>
+
+                <!-- Date strip -->
+                <div class="date-strip">
+                    <div class="date-strip__row">
+                        <span class="date-strip__day" th:text="${checkInDay != null ? checkInDay : 'Tuesday'}">Tuesday</span>
+                        <span class="date-strip__nights" th:text="${nights != null ? nights + ' night(s)' : '1 night(s)'}">1 night(s)</span>
+                        <span class="date-strip__day" th:text="${checkOutDay != null ? checkOutDay : 'Wednesday'}">Wednesday</span>
+                    </div>
+                    <div class="date-strip__row mt4">
+                        <span class="date-strip__date" th:text="${checkIn != null ? checkIn : 'Mar 24, 2026'}">Mar 24, 2026</span>
+                        <span class="date-strip__date" th:text="${checkOut != null ? checkOut : 'Mar 25, 2026'}">Mar 25, 2026</span>
+                    </div>
+                </div>
+
+                <!-- Divider -->
+                <img
+                        class="panel-divider"
+                        src="https://static.codia.ai/s/image_0c47bb38-fdbd-4671-99d4-33c980857ec4.png"
+                        alt=""
+                        aria-hidden="true"
+                />
+
+                <!-- Charges section -->
+                <!--
+                  th:each="room : ${rooms}" for room charge rows
+                -->
+                <div class="charges-section">
+                    <div class="charges-header">
+                        <span class="charges-title">Charges</span>
+                        <a href="#" class="charges-view">View detail</a>
+                    </div>
+
+                    <!-- Room charges total row -->
+                    <div class="charges-row charges-row--bold">
+                        <span class="charges-row__label">Room charges</span>
+                        <span class="charges-row__value"
+                              th:text="${totalCharge != null ? totalCharge : '18,000,000 VND'}">18,000,000 VND</span>
+                    </div>
+
+                    <!-- Individual room rows – th:each in real Thymeleaf -->
+                    <div class="charges-subrow">
+                <span class="charges-subrow__label">
+                  <img
+                          src="https://static.codia.ai/s/image_c9edcc5d-e981-4935-8312-f80d90fa331f.png"
+                          alt="" class="charges-subrow__icon" aria-hidden="true"
+                  />
+                  Room 1
+                </span>
+                        <span class="charges-subrow__value">4,500,000 VND</span>
+                    </div>
+                    <div class="charges-subrow">
+                <span class="charges-subrow__label">
+                  <img
+                          src="https://static.codia.ai/s/image_53751c4e-7b4d-49de-8ee7-debea993e53c.png"
+                          alt="" class="charges-subrow__icon" aria-hidden="true"
+                  />
+                  Room 2
+                </span>
+                        <span class="charges-subrow__value">4,500,000 VND</span>
+                    </div>
+                    <div class="charges-subrow">
+                <span class="charges-subrow__label">
+                  <img
+                          src="https://static.codia.ai/s/image_42fd1915-709c-4b76-87a3-dbbef2f8b341.png"
+                          alt="" class="charges-subrow__icon" aria-hidden="true"
+                  />
+                  Room 3
+                </span>
+                        <span class="charges-subrow__value">4,500,000 VND</span>
+                    </div>
+                    <div class="charges-subrow">
+                <span class="charges-subrow__label">
+                  <img
+                          src="https://static.codia.ai/s/image_b38af7f6-59c7-44b8-9e17-55bf715254dc.png"
+                          alt="" class="charges-subrow__icon" aria-hidden="true"
+                  />
+                  Room 4
+                </span>
+                        <span class="charges-subrow__value">4,500,000 VND</span>
+                    </div>
+                </div>
+
+                <!-- Divider -->
+                <img
+                        class="panel-divider"
+                        src="https://static.codia.ai/s/image_f10f156b-aaef-4423-8ba9-0d3f36515837.png"
+                        alt=""
+                        aria-hidden="true"
+                />
+
+                <!-- Discount row -->
+                <div class="discount-row mt12" style="padding-top:10px; padding-bottom:10px;">
+                    <span class="discount-row__label">Discount code</span>
+                    <div class="discount-row__input-wrap">
+                        <input class="discount-input" type="text" name="discountCode" placeholder="" />
+                        <button type="button" class="discount-apply-btn">Apply</button>
+                    </div>
+                </div>
+
+                <!-- Divider -->
+                <img
+                        class="panel-divider"
+                        src="https://static.codia.ai/s/image_1941a807-496e-4489-8353-027bc8d4ba4d.png"
+                        alt=""
+                        aria-hidden="true"
+                />
+
+                <!-- Total charge + Payment -->
+                <div class="total-section">
+                    <div class="total-row">
+                        <span class="total-label">Total Charge</span>
+                        <span class="total-value"
+                              th:text="${totalCharge != null ? totalCharge : '18,000,000 VND'}">18,000,000 VND</span>
+                    </div>
+                    <p class="total-note">*Inclusive of Service Charge and Tax</p>
+
+                    <!-- Payment button – triggers form submit -->
+                    <button type="button" class="payment-btn" onclick="document.getElementById('booking-form').submit()">
+                        Payment
+                    </button>
+
+                    <div class="legal-text">
+                        <p>By proceeding with this booking, I agree to
+                            <a href="#" th:href="@{/terms}">Terms &amp; conditions</a>
+                            and <a href="#" th:href="@{/privacy}">Privacy statement</a>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Cancel policy -->
+                <section class="cancel-policy">
+                    <h3 class="cancel-policy__title">Cancel policy</h3>
+                    <!--
+                      th:each="policy : ${cancelPolicy}"
+                      Dynamic rendering in Thymeleaf:
+                      <div class="cancel-policy__row" th:each="policy : ${cancelPolicy}">
+                        <span class="cancel-policy__room" th:text="${policy.roomLabel}">Room 1:</span>
+                        <span class="cancel-policy__text" th:text="${policy.description}">Be charged 100%...</span>
+                      </div>
+                    -->
+                    <div class="cancel-policy__row">
+                        <span class="cancel-policy__room">Room 1:</span>
+                        <span class="cancel-policy__text">Be charged 100% of room charge when cancel</span>
+                    </div>
+                    <div class="cancel-policy__row">
+                        <span class="cancel-policy__room">Room 2:</span>
+                        <span class="cancel-policy__text">Be charged 100% of room charge when cancel</span>
+                    </div>
+                    <div class="cancel-policy__row">
+                        <span class="cancel-policy__room">Room 3:</span>
+                        <span class="cancel-policy__text">Be charged 100% of room charge when cancel</span>
+                    </div>
+                    <div class="cancel-policy__row">
+                        <span class="cancel-policy__room">Room 4:</span>
+                        <span class="cancel-policy__text">Be charged 100% of room charge when cancel</span>
+                    </div>
+                </section>
+
+            </aside>
+            <!-- /page-layout__right -->
+
+        </div>
+        <!-- /page-layout -->
+    </div>
+</th:block>

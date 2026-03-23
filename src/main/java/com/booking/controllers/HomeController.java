@@ -27,13 +27,14 @@ public class HomeController {
         return "index";
     }
 
-    @GetMapping("/booking-rooms")
+    @GetMapping("/booking")
     public String bookingRooms(Model model){
         model.addAttribute("categories", categoryService.getAll());
+        model.addAttribute("step", 1);
         return "pages/booking";
     }
 
-    @GetMapping("booking/search")
+    @GetMapping("/booking/search")
     public String search(
             @RequestParam String fromDate,
             @RequestParam String toDate,
@@ -44,6 +45,13 @@ public class HomeController {
     ){
         var categories = categoryService.availableRooms(java.sql.Date.valueOf(fromDate), java.sql.Date.valueOf(toDate), rooms, adults, children);
         model.addAttribute("categories", categories);
-        return "fragments/user/categoryavailable :: categoryList";
+        model.addAttribute("step", 1);
+        return "fragments/user/category-available :: categoryList";
+    }
+
+    @GetMapping("/booking/review")
+    public String review(Model model){
+        model.addAttribute("step", 2);
+        return  "pages/booking";
     }
 }
