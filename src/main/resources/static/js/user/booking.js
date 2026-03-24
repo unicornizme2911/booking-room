@@ -512,7 +512,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    document.getElementById('reserveBtn').addEventListener('click', function (e) {
+    document.getElementById("reserveBtn").addEventListener('click', function (e) {
         console.log("Booking data:" + bookingState);
         const payload = {
             bookingState: bookingState,

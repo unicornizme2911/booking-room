@@ -1,7 +1,31 @@
 // Room tab switching
 document.addEventListener('DOMContentLoaded', function () {
     // ── Room tabs ──
-    var tabs = document.querySelectorAll('.room-tab');
+    const tabs = document.querySelectorAll('.room-tab');
+    const imGuestCheckbox = document.getElementById('im-guest');
+    const hideDetailsBtn = document.getElementById('hide-room-details');
+    const roomDetailContent = document.getElementById('room-detail-content');
+    const hideSpecialBtn = document.getElementById('hide-special-request');
+    const specialBody = document.getElementById('special-request-body');
+    const applyBtn = document.querySelector('.discount-apply-btn');
+    const payBtn = document.querySelector('.payment-btn');
+    const phoneInput = document.querySelector(".phone-input");
+    const countryInput = document.querySelector(".country-input");
+
+    const iti = window.intlTelInput(phoneInput, {
+        initialCountry: "vn",
+        separateDialCode: true,
+        preferredCountries: ["vn", "us", "gb", "jp", "kr"],
+    });
+
+    const countryMap = {
+        "vietnam": "vn",
+        "united states": "us",
+        "united kingdom": "gb",
+        "japan": "jp",
+        "korea": "kr"
+    };
+
     tabs.forEach(function (tab) {
         tab.addEventListener('click', function () {
             tabs.forEach(function (t) { t.classList.remove('room-tab--active'); });
@@ -10,13 +34,12 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // ── Booker "I'm guest" checkbox fills in guest form from booker fields ──
-    var imGuestCheckbox = document.getElementById('im-guest');
     if (imGuestCheckbox) {
         imGuestCheckbox.addEventListener('change', function () {
-            var bookerName = document.getElementById('booker-name') ? document.getElementById('booker-name').value : '';
-            var bookerEmail = document.getElementById('booker-email') ? document.getElementById('booker-email').value : '';
-            var guestName = document.getElementById('guest-name');
-            var guestEmail = document.getElementById('guest-email');
+            const bookerName = document.getElementById('booker-name') ? document.getElementById('booker-name').value : '';
+            const bookerEmail = document.getElementById('booker-email') ? document.getElementById('booker-email').value : '';
+            const guestName = document.getElementById('guest-name');
+            const guestEmail = document.getElementById('guest-email');
             if (imGuestCheckbox.checked) {
                 if (guestName) guestName.value = bookerName;
                 if (guestEmail) guestEmail.value = bookerEmail;
@@ -28,31 +51,28 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // ── Special request / Room detail toggle (Hide details) ──
-    var hideDetailsBtn = document.getElementById('hide-room-details');
-    var roomDetailContent = document.getElementById('room-detail-content');
+
     if (hideDetailsBtn && roomDetailContent) {
         hideDetailsBtn.addEventListener('click', function () {
-            var isHidden = roomDetailContent.style.display === 'none';
+            const isHidden = roomDetailContent.style.display === 'none';
             roomDetailContent.style.display = isHidden ? '' : 'none';
             hideDetailsBtn.querySelector('.toggle-label').textContent = isHidden ? 'Hide details' : 'Show details';
         });
     }
 
-    var hideSpecialBtn = document.getElementById('hide-special-request');
-    var specialBody = document.getElementById('special-request-body');
+
     if (hideSpecialBtn && specialBody) {
         hideSpecialBtn.addEventListener('click', function () {
-            var isHidden = specialBody.style.display === 'none';
+            const isHidden = specialBody.style.display === 'none';
             specialBody.style.display = isHidden ? '' : 'none';
             hideSpecialBtn.querySelector('.toggle-label').textContent = isHidden ? 'Hide details' : 'Show details';
         });
     }
 
     // ── Discount code apply ──
-    var applyBtn = document.querySelector('.discount-apply-btn');
     if (applyBtn) {
         applyBtn.addEventListener('click', function () {
-            var discountInput = document.querySelector('.discount-input');
+            const discountInput = document.querySelector('.discount-input');
             if (discountInput && discountInput.value.trim()) {
                 alert('Discount code "' + discountInput.value.trim() + '" applied!');
             }
@@ -60,12 +80,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // ── Payment button ──
-    var payBtn = document.querySelector('.payment-btn');
     if (payBtn) {
         payBtn.addEventListener('click', function () {
             // Validate booker name & email
-            var bookerName = document.getElementById('booker-name');
-            var bookerEmail = document.getElementById('booker-email');
+            const bookerName = document.getElementById('booker-name');
+            const bookerEmail = document.getElementById('booker-email');
             if (bookerName && !bookerName.value.trim()) {
                 bookerName.focus();
                 return;
@@ -78,4 +97,20 @@ document.addEventListener('DOMContentLoaded', function () {
             alert('Proceeding to payment...');
         });
     }
+
+    phoneInput.addEventListener("countrychange", function () {
+
+        const data = iti.getSelectedCountryData();
+        countryInput.value = data.name;
+    });
+
+    countryInput.addEventListener("input", function () {
+
+        const value = countryInput.value.toLowerCase();
+
+        if(countryMap[value]){
+            iti.setCountry(countryMap[value]);
+        }
+
+    });
 });
