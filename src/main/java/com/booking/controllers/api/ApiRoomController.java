@@ -26,12 +26,4 @@ public class ApiRoomController {
     public ResponseEntity<RoomResponse> addRoom(@Valid @ModelAttribute RoomRequest roomRequest) {
         return ResponseEntity.ok().body(roomService.add(roomRequest));
     }
-
-    @PostMapping("/available")
-    public ResponseEntity<List<RoomResponse>> available(
-            @RequestParam String fromDate,
-            @RequestParam String toDate
-    ){
-        return ResponseEntity.ok().body(roomService.searchAvailableRooms(new Date(fromDate), new Date(toDate)));
-    }
 }

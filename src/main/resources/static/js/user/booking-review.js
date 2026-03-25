@@ -12,6 +12,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const phoneInput = document.querySelector(".phone-input");
     const countryInput = document.querySelector(".country-input");
 
+    let expiredAt;
+    const reservationId = document.getElementById("reservationId").value;
+
+    const countdownEl = document.getElementById("countdownText");
+    const progressBar = document.getElementById("progressBar");
+    const modal = document.getElementById("expiredModal");
+
     const iti = window.intlTelInput(phoneInput, {
         initialCountry: "vn",
         separateDialCode: true,

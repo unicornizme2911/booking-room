@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function (e) {
     let checkinDate = new Date();
     checkinDate.setHours(0, 0, 0, 0);
 
@@ -447,6 +447,29 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(html => {
                     container.innerHTML = html;
                     totalAmountDisplay = document.getElementById('totalAmount');
+                    const reserveBtn = document.getElementById('reserveBtn');
+                    if (reserveBtn) {
+                        reserveBtn.addEventListener('click', function () {
+                            const categories = Object.keys(bookingState).map(categoryId => ({
+                                categoryId: categoryId,
+                                rooms: bookingState[categoryId].rooms
+                            }));
+                            const payload = {
+                                fromDate: checkin,
+                                toDate: checkout,
+                                nights: calculateNights(),
+                                categories: categories
+                            }
+                            fetch('/booking/review', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(payload)
+                            }).then(res => res.json())
+                                .then(reservation => {
+                                    window.location.href = `booking/review?reservationId=${reservation.id}`;
+                                });
+                        });
+                    }
                     initGallery();
                 });
         });
@@ -510,17 +533,6 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
             document.querySelectorAll(".room-dropdown").forEach(d => d.classList.add("hidden"));
         }
-    });
-
-    document.getElementById("reserveBtn").addEventListener('click', function (e) {
-        console.log("Booking data:" + bookingState);
-        const payload = {
-            bookingState: bookingState,
-            checkin: checkinDate,
-            checkout: checkoutDate,
-        }
-
-        window.location.href = "/booking/review";
     });
 
     document.addEventListener('keydown', function (e) {

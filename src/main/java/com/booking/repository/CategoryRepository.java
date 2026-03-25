@@ -24,7 +24,7 @@ public interface CategoryRepository extends JpaRepository<CategoryModel,String> 
                  WHERE rr.room.id = r.id
                  AND res.check_in < :toDate
                  AND res.check_out > :fromDate
-                 AND res.status = 'CONFIRMED'
+                 AND res.status IN ('CONFIRMED','HOLD')
             )
             GROUP BY c.id, c.name
             """)

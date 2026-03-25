@@ -88,11 +88,11 @@ public class RoomService {
         return toResponse(room);
     }
 
-    public List<RoomResponse> searchAvailableRooms(Date fromDate, Date toDate){
+    public List<RoomResponse> searchAvailableRooms(Long categoryId, Date fromDate, Date toDate, int quantity){
         if(fromDate == null || toDate == null || fromDate.after(toDate)){
             throw new RuntimeException("Invalid date range");
         }
-        return toResponse(roomRepository.findAvailableRooms(fromDate, toDate));
+        return toResponse(roomRepository.findRandomAvailableRooms(categoryId, fromDate, toDate, quantity));
     }
 
     public RoomResponse update(String id, RoomRequest request){

@@ -19,8 +19,6 @@ public class ReservationRoom {
 
     private Double price_at_booking;
 
-    private Integer guest_count;
-
     @ManyToOne
     @JoinColumn(name = "reservation_id")
     private ReservationModel reservation;

@@ -1,17 +1,22 @@
 package com.booking.services;
 
+import com.booking.dto.request.BookingPreviewRequest;
+import com.booking.dto.request.CategoryBookingItem;
 import com.booking.dto.request.ReservationMealRequest;
 import com.booking.dto.request.ReservationRequest;
+import com.booking.dto.response.BookingPreviewResponse;
 import com.booking.dto.response.ReservationMealResponse;
 import com.booking.dto.response.ReservationResponse;
-import com.booking.models.MealModel;
-import com.booking.models.ReservationMeal;
-import com.booking.models.ReservationModel;
-import com.booking.models.RoomModel;
+import com.booking.models.*;
 import com.booking.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -36,6 +41,10 @@ public class ReservationService {
     private MealRepository mealRepository;
     @Autowired
     private ReservationRepository reservationRepository;
+    @Autowired
+    private ReservationRoomRepository reservationRoomRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
 
 
     public ReservationModel toEntity(ReservationRequest request){
@@ -118,24 +127,66 @@ public class ReservationService {
         return toResponse(reservationSaved);
     }
 
-//    public List<RoomModel> checkRoomInDay(Date fromDate, Date toDate){
-//        if (fromDate.after(toDate) || fromDate.equals(toDate)) {
-//            throw new IllegalArgumentException("Check in date must be before check out date");
-//        }
-//
-//        List<ReservationModel> reservations = reservationRepository.findOverlappingReservations(fromDate, toDate);
-//
-//        Set<Long> room_ids = reservations.stream()
-//                .flatMap(r -> r.getRooms().stream())
-//                .map(RoomModel::getId)
-//                .collect(Collectors.toSet());
-//
-//        List<RoomModel> availableRooms = room_ids.isEmpty()
-//                ? roomRepository.findAll()
-//                : roomRepository.findAll().stream().filter(r -> !room_ids.contains(r.getId())).toList();
-//
-//        return availableRooms;
-//    }
+    @Transactional
+    public BookingPreviewResponse preview(BookingPreviewRequest request){
+        List<RoomModel> selectedRooms = new ArrayList<>();
+        for(CategoryBookingItem item : request.getCategories()){
+            List<RoomModel> rooms = roomRepository.findRandomAvailableRooms(
+                    item.getCategoryId(),
+                    request.getFromDate(),
+                    request.getToDate(),
+                    item.getRooms()
+            );
+            if (rooms.size() < item.getRooms()) {
+                throw new RuntimeException("Not enough rooms");
+            }
+            selectedRooms.addAll(rooms);
+        }
 
+        List<Long> roomIds = selectedRooms.stream().map(RoomModel::getId).toList();
+        List<RoomModel> lockedRooms = roomRepository.lockRooms(roomIds);
 
+        ReservationModel reservation = new ReservationModel();
+        reservation.setCheck_in(request.getFromDate());
+        reservation.setCheck_out(request.getToDate());
+        reservation.setStatus("HOLD");
+        reservation.setExpiredAt(LocalDateTime.now().plusMinutes(5));
+        reservationRepository.save(reservation);
+        for (RoomModel room: lockedRooms) {
+            if (reservationRepository.existsConflict(room.getId(),request.getFromDate(),request.getToDate())) {
+                throw new RuntimeException("Room already booked");
+            } else {
+                ReservationRoom rr = new ReservationRoom();
+                rr.setRoom(room);
+                rr.setReservation(reservation);
+                rr.setPrice_at_booking(room.getCategory().getPrice()*request.getNights());
+                reservationRoomRepository.save(rr);
+            }
+        }
+
+        return BookingPreviewResponse.builder()
+                .id(reservation.getId())
+                .rooms(roomService.toResponse(lockedRooms))
+                .fromDate(reservation.getCheck_in())
+                .toDate(reservation.getCheck_out())
+                .expiredAt(reservation.getExpiredAt())
+                .build();
+    }
+
+    @Transactional
+    public void confirm(Long id){
+
+        ReservationModel res = reservationRepository.findById(String.valueOf(id)).orElseThrow();
+
+        if(res.getExpiredAt().isBefore(LocalDateTime.now())){
+            throw new RuntimeException("Reservation expired");
+        }
+
+        res.setStatus("CONFIRMED");
+    }
+
+    public ReservationResponse get(Long id){
+        var reservation = reservationRepository.findById(String.valueOf(id)).orElseThrow();
+        return toResponse(reservation);
+    }
 }
