@@ -2,10 +2,13 @@ package com.booking.controllers.api;
 
 import com.booking.dto.request.ReservationRequest;
 import com.booking.dto.response.ReservationResponse;
+import com.booking.models.ReservationModel;
+import com.booking.repository.ReservationRepository;
 import com.booking.services.ReservationService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -17,16 +20,6 @@ class ApiReservationController {
     @Autowired
     private ReservationService reservationService;
 
-//    @GetMapping("/list")
-//    public ResponseEntity<List<ReservationResponse>> getAllCategories() {
-//        return ResponseEntity.ok().body();
-//    }
-//
-//    @GetMapping("/id")
-//    public ResponseEntity<ReservationResponse> getReservationById(@RequestParam String id) {
-//        return ResponseEntity.ok().body(reservationService.getById(id));
-//    }
-
     @PostMapping("/add")
     public ResponseEntity<ReservationResponse> addReservation(
             @ModelAttribute @Valid ReservationRequest reservationRequest
@@ -34,11 +27,10 @@ class ApiReservationController {
         return ResponseEntity.ok().body(reservationService.add(reservationRequest));
     }
 
-//    @PostMapping("/checking")
-//    public ResponseEntity<?>  checkReservation(
-//            @RequestBody Date fromDate,
-//            @RequestBody Date toDate
-//    ){
-//        return ResponseEntity.ok().body(reservationService.checkRoomInDay(fromDate,toDate));
-//    }
+    @PostMapping("/cancel/{id}")
+    @Transactional
+    public ResponseEntity<ReservationResponse> cancel(@PathVariable Long id){
+        var reservation = reservationService.setStatus(id, "CANCELLED");
+        return ResponseEntity.ok().body(reservation);
+    }
 }

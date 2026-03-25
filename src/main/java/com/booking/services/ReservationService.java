@@ -10,6 +10,7 @@ import com.booking.dto.response.ReservationResponse;
 import com.booking.models.*;
 import com.booking.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,8 +44,6 @@ public class ReservationService {
     private ReservationRepository reservationRepository;
     @Autowired
     private ReservationRoomRepository reservationRoomRepository;
-    @Autowired
-    private CategoryRepository categoryRepository;
 
 
     public ReservationModel toEntity(ReservationRequest request){
@@ -188,5 +187,22 @@ public class ReservationService {
     public ReservationResponse get(Long id){
         var reservation = reservationRepository.findById(String.valueOf(id)).orElseThrow();
         return toResponse(reservation);
+    }
+
+    public ReservationResponse setStatus(Long id, String status){
+        var reservation = reservationRepository.findById(String.valueOf(id)).orElseThrow();
+        if ("HOLD".equalsIgnoreCase(reservation.getStatus())){
+            reservation.setStatus(status);
+            reservationRepository.save(reservation);
+        }
+        return toResponse(reservation);
+    }
+
+    @Scheduled(fixedRate = 60000)
+    @Transactional
+    public void cancel(){
+        List<ReservationModel> reservations = reservationRepository
+                .findByStatusAndExpiredAtBefore("HOLD",LocalDateTime.now());
+        reservations.forEach(reservation -> reservation.setStatus("CANCELLED"));
     }
 }

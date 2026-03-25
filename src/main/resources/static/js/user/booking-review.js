@@ -2,7 +2,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     // ── Room tabs ──
     const tabs = document.querySelectorAll('.room-tab');
-    const imGuestCheckbox = document.getElementById('im-guest');
+    const panels = document.querySelectorAll('.room-panel');
     const hideDetailsBtn = document.getElementById('hide-room-details');
     const roomDetailContent = document.getElementById('room-detail-content');
     const hideSpecialBtn = document.getElementById('hide-special-request');
@@ -18,6 +18,71 @@ document.addEventListener('DOMContentLoaded', function () {
     const countdownEl = document.getElementById("countdownText");
     const progressBar = document.getElementById("progressBar");
     const modal = document.getElementById("expiredModal");
+
+    // Load Timer
+    const savedExpired = sessionStorage.getItem('expiredAt_' + reservationId);
+    if (savedExpired) {
+        expiredAt = new Date(Number(savedExpired));
+    } else {
+        const serverExpired = document.getElementById("expiredAt").value;
+        expiredAt = new Date(Number(serverExpired));
+        sessionStorage.setItem('expiredAt_' + reservationId, expiredAt.getTime());
+    }
+
+    // Multi Tab Lock
+    const lockKey = "booking_lock_" + reservationId;
+    if (localStorage.getItem(lockKey)) {
+        alert("Booking already opened in another tab!");
+        window.location.href = "/booking";
+    }
+    localStorage.setItem(lockKey, "locked");
+    window.addEventListener("beforeunload", () => {
+        localStorage.removeItem(lockKey);
+    });
+
+    // Save From Data
+    const form = document.getElementById("booking-form");
+    form.addEventListener("input", (e) => {
+        const data = new FormData(form);
+        const obj = Object.fromEntries(data.entries());
+        sessionStorage.setItem("booking_form", JSON.stringify(obj));
+    })
+    const savedForm = sessionStorage.getItem("booking_form");
+    if (savedForm) {
+        const data = JSON.parse(savedForm);
+        Object.keys(data).forEach(key => {
+            const el = form.querySelector(`[name="${key}"]`);
+            if (el) el.value = data[key];
+        })
+    }
+
+    // Countdown Time
+    const TOTAL_TIME = expiredAt - new Date();
+    function handleExpired() {
+        payBtn.disabled = true;
+        modal.style.display = "block";
+        fetch(`api/reservations/cancel/${reservationId}`, {
+            method: 'POST',
+        }).catch(() => {});
+    }
+    function updateCountdown() {
+        const now = new Date();
+        const diff = expiredAt - now;
+        if (diff <= 0) {
+            handleExpired();
+            return;
+        }
+        const minutes = Math.floor(diff / 1000 / 60);
+        const seconds = Math.floor((diff / 1000) % 60);
+
+        countdownEl.innerText = `Time left: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+        const percent = (diff / TOTAL_TIME) * 100;
+        progressBar.style.width = percent + "%";
+
+        if(percent < 30) progressBar.style.background = "orange";
+        if(percent < 10) progressBar.style.background = "red";
+    }
+    setInterval(updateCountdown, TOTAL_TIME);
 
     const iti = window.intlTelInput(phoneInput, {
         initialCountry: "vn",
@@ -35,29 +100,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
     tabs.forEach(function (tab) {
         tab.addEventListener('click', function () {
-            tabs.forEach(function (t) { t.classList.remove('room-tab--active'); });
-            tab.classList.add('room-tab--active');
-        });
-    });
+            const index = this.getAttribute('data-room');
+            tabs.forEach(t => t.classList.remove('room-tab--active'));
+            this.classList.add('room-tab--active');
+            panels.forEach(p => p.style.display = 'none');
 
-    // ── Booker "I'm guest" checkbox fills in guest form from booker fields ──
-    if (imGuestCheckbox) {
-        imGuestCheckbox.addEventListener('change', function () {
-            const bookerName = document.getElementById('booker-name') ? document.getElementById('booker-name').value : '';
-            const bookerEmail = document.getElementById('booker-email') ? document.getElementById('booker-email').value : '';
-            const guestName = document.getElementById('guest-name');
-            const guestEmail = document.getElementById('guest-email');
-            if (imGuestCheckbox.checked) {
-                if (guestName) guestName.value = bookerName;
-                if (guestEmail) guestEmail.value = bookerEmail;
-            } else {
-                if (guestName) guestName.value = '';
-                if (guestEmail) guestEmail.value = '';
+            const activePanel = document.getElementById(`room-panel-${index}`);
+            if (activePanel) {
+                activePanel.style.display = 'block';
             }
         });
-    }
-
-    // ── Special request / Room detail toggle (Hide details) ──
+    });
 
     if (hideDetailsBtn && roomDetailContent) {
         hideDetailsBtn.addEventListener('click', function () {
@@ -66,7 +119,6 @@ document.addEventListener('DOMContentLoaded', function () {
             hideDetailsBtn.querySelector('.toggle-label').textContent = isHidden ? 'Hide details' : 'Show details';
         });
     }
-
 
     if (hideSpecialBtn && specialBody) {
         hideSpecialBtn.addEventListener('click', function () {
@@ -120,4 +172,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
     });
+
+    document.getElementById("closeModal").onclick = function () {
+        sessionStorage.removeItem("booking_form");
+        sessionStorage.removeItem("expiredAt_" + reservationId);
+        window.location.href = "/booking";
+    }
 });
