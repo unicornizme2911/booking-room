@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let expiredAt;
     const reservationId = document.getElementById("reservationId").value;
-
     const countdownEl = document.getElementById("countdownText");
     const progressBar = document.getElementById("progressBar");
     const modal = document.getElementById("expiredModal");
@@ -25,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
         expiredAt = new Date(Number(savedExpired));
     } else {
         const serverExpired = document.getElementById("expiredAt").value;
-        expiredAt = new Date(Number(serverExpired));
+        expiredAt = new Date(serverExpired);
         sessionStorage.setItem('expiredAt_' + reservationId, expiredAt.getTime());
     }
 
@@ -68,6 +67,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function updateCountdown() {
         const now = new Date();
         const diff = expiredAt - now;
+        console.log(diff);
         if (diff <= 0) {
             handleExpired();
             return;
@@ -83,6 +83,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if(percent < 10) progressBar.style.background = "red";
     }
     setInterval(updateCountdown, TOTAL_TIME);
+
 
     const iti = window.intlTelInput(phoneInput, {
         initialCountry: "vn",
@@ -158,19 +159,15 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     phoneInput.addEventListener("countrychange", function () {
-
         const data = iti.getSelectedCountryData();
         countryInput.value = data.name;
     });
 
     countryInput.addEventListener("input", function () {
-
         const value = countryInput.value.toLowerCase();
-
         if(countryMap[value]){
             iti.setCountry(countryMap[value]);
         }
-
     });
 
     document.getElementById("closeModal").onclick = function () {

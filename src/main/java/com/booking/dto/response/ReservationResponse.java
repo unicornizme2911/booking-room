@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class ReservationResponse {
     private Date check_out;
     private String status;
     private UserResponse user;
+    private LocalDateTime expiredAt;
     private List<RoomResponse> rooms;
     private TransportResponse transport;
     private List<ReservationMealResponse> meals;

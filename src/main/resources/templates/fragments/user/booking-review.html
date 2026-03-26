@@ -3,8 +3,8 @@
         <div class="page-layout" th:value="${reservation}">
 
             <div class="page-layout__left">
-                <input type="hidden" id="expiredAt" th:value="${expiredAt}" />
-                <input type="hidden" id="reservationId" th:value="${id}" />
+                <input type="hidden" id="expiredAt" th:value="${reservation.expiredAt}" />
+                <input type="hidden" id="reservationId" th:value="${reservation.id}" />
                 <div class="countdown-box">
                     <div class="countdown-header">
                         ⏳ Time left to complete booking

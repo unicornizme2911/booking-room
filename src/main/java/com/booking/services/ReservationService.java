@@ -68,6 +68,7 @@ public class ReservationService {
                 .id(reservation.getId())
                 .check_in(reservation.getCheck_in())
                 .check_out(reservation.getCheck_out())
+                .expiredAt(reservation.getExpiredAt())
                 .user(reservation.getUser() == null ? null : userService.toResponse(reservation.getUser()))
                 .rooms(reservation.getReservation_rooms() == null ? null :
                         reservation.getReservation_rooms().stream().map(rm -> {
@@ -149,7 +150,7 @@ public class ReservationService {
         reservation.setCheck_in(request.getFromDate());
         reservation.setCheck_out(request.getToDate());
         reservation.setStatus("HOLD");
-        reservation.setExpiredAt(LocalDateTime.now().plusMinutes(5));
+        reservation.setExpiredAt(LocalDateTime.now().plusMinutes(10));
         reservationRepository.save(reservation);
         for (RoomModel room: lockedRooms) {
             if (reservationRepository.existsConflict(room.getId(),request.getFromDate(),request.getToDate())) {
@@ -204,5 +205,16 @@ public class ReservationService {
         List<ReservationModel> reservations = reservationRepository
                 .findByStatusAndExpiredAtBefore("HOLD",LocalDateTime.now());
         reservations.forEach(reservation -> reservation.setStatus("CANCELLED"));
+    }
+
+    @Scheduled(fixedRate = 60000)
+    public void releaseExpiredReservations() {
+        List<ReservationModel> expired = reservationRepository
+                .findByStatusAndExpiredAtBefore("HOLD",LocalDateTime.now());
+        for (var r : expired) {
+            r.setStatus("EXPIRED");
+            reservationRoomRepository.deleteByReservation(r);
+        }
+        reservationRepository.saveAll(expired);
     }
 }

@@ -3,7 +3,7 @@
 
     <!-- Hero Banner -->
     <div class="booking-hero">
-        <img th:src="@{/uploads/hotel-banner.jpg}" alt="Hotel Pool View" class="hero-image"/>
+<!--        <img th:src="@{/uploads/hotel-banner.jpg}" alt="Hotel Pool View" class="hero-image"/>-->
     </div>
 
     <!-- Search Bar -->
@@ -150,18 +150,18 @@
             <span class="step-number">1</span>
             <span class="step-label">Find a Room</span>
         </div>
-        <div class="step-line" th:classappend="${step == 2 ? 'active' : ''}"></div>
-        <div class="step">
+        <div class="step-line"></div>
+        <div class="step" th:classappend="${step == 2 ? 'active' : ''}">
             <span class="step-number">2</span>
             <span class="step-label">Review</span>
         </div>
-        <div class="step-line" th:classappend="${step == 3 ? 'active' : ''}"></div>
-        <div class="step">
+        <div class="step-line"></div>
+        <div class="step" th:classappend="${step == 3 ?2 'active' : ''}">
             <span class="step-number">3</span>
             <span class="step-label">Payment</span>
         </div>
-        <div class="step-line" th:classappend="${step == 4 ? 'active' : ''}"></div>
-        <div class="step">
+        <div class="step-line"></div>
+        <div class="step" th:classappend="${step == 4 ? 'active' : ''}">
             <span class="step-number">4</span>
             <span class="step-label">Complete</span>
         </div>

@@ -11,7 +11,7 @@
     <body>
         <div class="container-fluid position-relative m-0 p-0">
             <th:block th:insert="~{fragments/util/header :: header}"/>
-            <th:block th:insert="~{fragments/user/booking :: bookingHeader}"/>
+            <th:block th:insert="~{fragments/user/booking-header :: bookingHeader}"/>
             <div th:switch="${step}" class="booking-steps">
 
                 <th:block th:case="1">
@@ -27,12 +27,15 @@
         <th:block th:insert="~{fragments/util/footer :: footer}"/>
         <th:block th:insert="~{fragments/scripts/scripts :: scripts}"/>
         <th:block th:switch="${step}">
+            <th:block th:case="1">
+                <script th:src="@{/js/user/category-available.js}"></script>
+            </th:block>
             <th:block th:case="2">
                 <script th:src="@{/js/user/booking-review.js}"></script>
                 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/intlTelInput.min.js"></script>
                 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/utils.js"></script>
             </th:block>
         </th:block>
-        <script th:src="@{/js/user/booking.js}"></script>
+        <script th:src="@{/js/user/booking-header.js}"></script>
     </body>
 </html>

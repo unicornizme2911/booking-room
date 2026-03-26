@@ -17,10 +17,6 @@ document.addEventListener('DOMContentLoaded', function (e) {
         children: 0
     };
 
-    let totalAmount = 0;
-
-    let bookingState = {};
-
     const dateRangeWrapper = document.getElementById('dateRangeWrapper');
     const calendarDropdown = document.getElementById('calendarDropdown');
     const guestsWrapper = document.getElementById('guestsWrapper');
@@ -33,7 +29,6 @@ document.addEventListener('DOMContentLoaded', function (e) {
     const checkoutDayDisplay = document.getElementById('checkoutDay');
     const nightsCountDisplay = document.getElementById('nightsCount');
     const guestsDisplay = document.getElementById('guestsDisplay');
-    let totalAmountDisplay = document.getElementById('totalAmount');
     const dateRangeSummary = document.getElementById('dateRangeSummary');
 
     const calendarPrev = document.getElementById('calendarPrev');
@@ -47,75 +42,10 @@ document.addEventListener('DOMContentLoaded', function (e) {
     const adultsCountDisplay = document.getElementById('adultsCount');
     const childrenCountDisplay = document.getElementById('childrenCount');
 
+    if (!dateRangeWrapper) return;
+
     const shortMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-
-    function initGallery() {
-        const galleries = document.querySelectorAll(".category-gallery");
-
-        galleries.forEach(gallery => {
-            const prevBtn = gallery.querySelector('.gallery-arrow.prev');
-            const nextBtn = gallery.querySelector('.gallery-arrow.next');
-            const dotsContainer = gallery.querySelector('.gallery-nav');
-            const photoCount = gallery.querySelector('.photo-count');
-            const img = gallery.querySelector('.gallery-img');
-            const images = gallery.dataset.images?.split(",") || [];
-            if (images.length === 0) {
-                photoCount.style.display = 'none';
-            }
-            let currentIndex = 0;
-
-            function updateGallery() {
-                if (images.length > 0) {
-                    img.src = images[currentIndex];
-                    updateDots();
-                    updatePhotoCount();
-                }
-            }
-
-            function updatePhotoCount() {
-                const countGallery = photoCount.querySelector('.count-gallery');
-                if (!countGallery) return;
-                countGallery.textContent = `${currentIndex+1}/${images.length}`;
-            }
-
-            function renderDots() {
-                dotsContainer.innerHTML = "";
-                images.forEach((_, index) => {
-                    const dot = document.createElement("span");
-                    dot.classList.add("gallery-dot");
-                    if (index === currentIndex) dot.classList.add("active");
-                    dot.addEventListener("click", () => {
-                        currentIndex = index;
-                        updateGallery();
-                    });
-                    dotsContainer.appendChild(dot);
-                });
-            }
-
-            function updateDots() {
-                const dots = dotsContainer.querySelectorAll(".gallery-dot");
-                dots.forEach((dot, i) => {
-                    dot.classList.toggle("active", i === currentIndex);
-                });
-            }
-
-            nextBtn.addEventListener("click", (e) => {
-                e.stopPropagation();
-                currentIndex = (currentIndex + 1) % images.length;
-                updateGallery();
-            });
-
-            prevBtn.addEventListener("click", (e) => {
-                e.stopPropagation();
-                currentIndex = (currentIndex - 1 + images.length) % images.length;
-                updateGallery();
-            });
-
-            renderDots();
-            updateGallery();
-        })
-    }
 
     function formatDate(date) {
         return `${shortMonths[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
@@ -139,10 +69,6 @@ document.addEventListener('DOMContentLoaded', function (e) {
         return Math.max(1, diffDays);
     }
 
-    function formatCurrency(amount) {
-        return amount.toLocaleString('vi-VN') + ' VND';
-    }
-
     function isSameDay(date1, date2) {
         return date1.getFullYear() === date2.getFullYear() &&
             date1.getMonth() === date2.getMonth() &&
@@ -163,7 +89,6 @@ document.addEventListener('DOMContentLoaded', function (e) {
         const nights = calculateNights();
         nightsCountDisplay.textContent = nights;
 
-        // Update summary
         dateRangeSummary.textContent = `${formatFullDate(checkinDate)} - ${formatFullDate(checkoutDate)} (${nights} night(s))`;
     }
 
@@ -192,35 +117,6 @@ document.addEventListener('DOMContentLoaded', function (e) {
             const maxValue = type === 'rooms' ? 10 : 20;
             btn.disabled = guests[type] >= maxValue;
         });
-    }
-
-    function updateTotalAmount() {
-        const nights = calculateNights();
-        totalAmount = Object.values(bookingState).reduce((total, booking) => {
-            return total + (booking.rooms * booking.price * nights);
-        },0);
-        totalAmountDisplay.innerText = formatCurrency(totalAmount);
-        const reserveBtn = document.querySelector('.reserve-btn');
-        if (totalAmount > 0) {
-            reserveBtn.classList.remove('hidden');
-        } else {
-            reserveBtn.classList.add('hidden');
-        }
-    }
-
-    function selectRoom(categoryId, rooms, price, btn) {
-        bookingState[categoryId] = {
-            rooms,
-            price
-        };
-        btn.innerText = `${rooms} room(s) selected`;
-        updateTotalAmount();
-    }
-
-    function removeRoom(categoryId, btn) {
-        delete bookingState[categoryId];
-        btn.innerText = "Select Room";
-        updateTotalAmount();
     }
 
     // Calendar Rendering - Monday-based weeks
@@ -306,7 +202,6 @@ document.addEventListener('DOMContentLoaded', function (e) {
                 checkoutDate = new Date(checkinDate);
                 checkoutDate.setDate(checkoutDate.getDate() + 1);
             }
-
             selectionMode = 'checkout';
         } else {
             if (selectedDate <= checkinDate) {
@@ -320,10 +215,8 @@ document.addEventListener('DOMContentLoaded', function (e) {
                 closeAllDropdowns();
             }
         }
-
         updateDateDisplays();
         updateCalendars();
-        updateTotalAmount();
     }
 
     function updateCalendars() {
@@ -446,31 +339,9 @@ document.addEventListener('DOMContentLoaded', function (e) {
                 .then(res => res.text())
                 .then(html => {
                     container.innerHTML = html;
-                    totalAmountDisplay = document.getElementById('totalAmount');
-                    const reserveBtn = document.getElementById('reserveBtn');
-                    if (reserveBtn) {
-                        reserveBtn.addEventListener('click', function () {
-                            const categories = Object.keys(bookingState).map(categoryId => ({
-                                categoryId: categoryId,
-                                rooms: bookingState[categoryId].rooms
-                            }));
-                            const payload = {
-                                fromDate: checkin,
-                                toDate: checkout,
-                                nights: calculateNights(),
-                                categories: categories
-                            }
-                            fetch('/booking/review', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify(payload)
-                            }).then(res => res.json())
-                                .then(reservation => {
-                                    window.location.href = `booking/review?reservationId=${reservation.id}`;
-                                });
-                        });
+                    if (window.initCategoryAvailable) {
+                        window.initCategoryAvailable();
                     }
-                    initGallery();
                 });
         });
     }
@@ -488,48 +359,6 @@ document.addEventListener('DOMContentLoaded', function (e) {
             !e.target.closest('.guests-dropdown')
         ) {
             closeAllDropdowns();
-        }
-        if (e.target.closest('.btn-select')){
-            const btn = e.target.closest('.btn-select');
-            const container = btn.closest(".category-actions");
-            const dropdown = container.querySelector(".room-dropdown");
-
-            const available = parseInt(btn.dataset.available);
-            const categoryId = btn.dataset.categoryId;
-            const price = parseFloat(btn.dataset.price);
-
-            document.querySelectorAll(".room-dropdown").forEach(d => d.classList.add("hidden"));
-            dropdown.classList.toggle("hidden");
-
-            dropdown.innerHTML = "";
-
-            if (bookingState[categoryId]) {
-                const removeDiv = document.createElement('div');
-                removeDiv.className = "room-item remove";
-                removeDiv.innerText = "Remove Selection";
-                removeDiv.onclick = () => {
-                    removeRoom(categoryId, btn);
-                    dropdown.classList.add("hidden");
-                }
-                dropdown.appendChild(removeDiv);
-            }
-
-            for (let i = 1; i <= available; i++) {
-                const div = document.createElement("div");
-                div.className = "room-item";
-
-                if (bookingState[categoryId]?.rooms === i) {
-                    div.classList.add("active");
-                }
-
-                div.innerText = `${i} room(s)`;
-
-                div.onclick = () => {
-                    selectRoom(categoryId, i, price, btn);
-                    dropdown.classList.add("hidden");
-                };
-                dropdown.appendChild(div);
-            }
         } else {
             document.querySelectorAll(".room-dropdown").forEach(d => d.classList.add("hidden"));
         }
@@ -541,8 +370,11 @@ document.addEventListener('DOMContentLoaded', function (e) {
         }
     });
 
-    initGallery();
     updateDateDisplays();
     updateGuestsDisplay();
-    updateTotalAmount();
+    window.BookingState = {
+        checkIn: checkinDate,
+        checkOut: checkoutDate,
+        nights: calculateNights()
+    }
 });
