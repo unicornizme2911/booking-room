@@ -7,6 +7,9 @@
                   href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/css/intlTelInput.css"/>
             <link rel="stylesheet" th:href="@{/css/user/booking-review.css}">
         </th:block>
+        <th:block th:case="3">
+            <link rel="stylesheet" th:href="@{/css/user/booking-payment.css}">
+        </th:block>
     </th:block>
     <body>
         <div class="container-fluid position-relative m-0 p-0">
@@ -22,11 +25,20 @@
                     <th:block th:replace="~{fragments/user/booking-review :: review}"/>
                 </th:block>
 
+                <th:block th:case="3">
+                    <th:block th:replace="~{fragments/user/booking-payment :: payment}"/>
+                </th:block>
+
+                <th:block th:case="4">
+                    <th:block th:replace="~{fragments/user/booking-complete :: complete}"/>
+                </th:block>
+
             </div>
         </div>
         <th:block th:insert="~{fragments/util/footer :: footer}"/>
         <th:block th:insert="~{fragments/scripts/scripts :: scripts}"/>
         <th:block th:switch="${step}">
+
             <th:block th:case="1">
                 <script th:src="@{/js/user/category-available.js}"></script>
             </th:block>
@@ -35,6 +47,10 @@
                 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/intlTelInput.min.js"></script>
                 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.1.1/build/js/utils.js"></script>
             </th:block>
+            <th:block th:case="3">
+                <script th:src="@{/js/user/booking-payment.js}"></script>
+            </th:block>
+
         </th:block>
         <script th:src="@{/js/user/booking-header.js}"></script>
     </body>

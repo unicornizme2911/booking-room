@@ -1,0 +1,33 @@
+<th:block th:fragment="payment">
+    <div class="payment-container">
+
+        <!-- LEFT -->
+        <div class="payment-left">
+            <h2>Your booking</h2>
+
+            <div th:each="room : ${reservation.rooms}" class="room-item">
+                <span th:text="${room.category.name}"></span>
+                <span th:text="${room.roomNumber}"></span>
+            </div>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="payment-right">
+
+            <h2>Payment</h2>
+
+            <div class="payment-total">
+                <span>Total</span>
+                <strong th:text="${#numbers.formatDecimal(total,0,'COMMA',0,'POINT')} + ' VND'"></strong>
+            </div>
+
+            <button id="payBtn" class="btn-pay" th:data-reservation-id="${reservation.id}">
+                Pay with VNPay
+            </button>
+
+            <div id="loading" class="hidden">Redirecting...</div>
+
+        </div>
+
+    </div>
+</th:block>

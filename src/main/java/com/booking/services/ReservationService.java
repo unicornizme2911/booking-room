@@ -7,6 +7,7 @@ import com.booking.dto.request.ReservationRequest;
 import com.booking.dto.response.BookingPreviewResponse;
 import com.booking.dto.response.ReservationMealResponse;
 import com.booking.dto.response.ReservationResponse;
+import com.booking.dto.response.RoomResponse;
 import com.booking.models.*;
 import com.booking.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -127,6 +128,15 @@ public class ReservationService {
         return toResponse(reservationSaved);
     }
 
+    public ReservationResponse update(String id, String full_name, String phone, String email){
+        var reservation = reservationRepository.findById(id).orElseThrow();
+        reservation.setFull_name(full_name);
+        reservation.setPhone(phone);
+        reservation.setEmail(email);
+        reservationRepository.save(reservation);
+        return toResponse(reservation);
+    }
+
     @Transactional
     public BookingPreviewResponse preview(BookingPreviewRequest request){
         List<RoomModel> selectedRooms = new ArrayList<>();
@@ -197,6 +207,15 @@ public class ReservationService {
             reservationRepository.save(reservation);
         }
         return toResponse(reservation);
+    }
+
+    public Long getTotal(Long id) {
+        var reservation = get(id);
+        long total = 0;
+        for(RoomResponse room : reservation.getRooms()) {
+            total += (long) room.getCategory().getPrice();
+        }
+        return total;
     }
 
     @Scheduled(fixedRate = 60000)

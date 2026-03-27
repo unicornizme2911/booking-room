@@ -1,0 +1,17 @@
+.payment-container {
+    display: flex;
+    gap: 20px;
+}
+
+.payment-right {
+    width: 300px;
+}
+
+.btn-pay {
+    width: 100%;
+    padding: 14px;
+    background: #0071c2;
+    color: white;
+    border: none;
+    border-radius: 8px;
+}

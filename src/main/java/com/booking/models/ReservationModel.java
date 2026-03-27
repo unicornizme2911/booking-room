@@ -20,8 +20,11 @@ public class ReservationModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String full_name;
+    private String email;
     private Date check_in;
     private Date check_out;
+    private String phone;
 
     @Column(nullable = false)
     private String status;
@@ -44,5 +47,5 @@ public class ReservationModel {
     private List<ReservationMeal> reservation_meals;
 
     @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL)
-    private InvoiceModel invoice;
+    private PaymentModel payment;
 }

@@ -1,0 +1,11 @@
+<th:block th:fragment="complete">
+    <div class="payment-result">
+
+        <h2 th:text="${reservation.status == 'CONFIRMED' ? 'Payment Success 🎉' : 'Payment Failed ❌'}"></h2>
+
+        <p>Booking ID: <span th:text="${reservation.id}"></span></p>
+
+        <a href="/">Back to home</a>
+
+    </div>
+</th:block>

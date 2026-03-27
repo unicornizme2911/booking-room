@@ -15,6 +15,9 @@ import java.util.List;
 @NoArgsConstructor
 public class ReservationResponse {
     private Long id;
+    private String full_name;
+    private String email;
+    private String phone;
     private Date check_in;
     private Date check_out;
     private String status;
