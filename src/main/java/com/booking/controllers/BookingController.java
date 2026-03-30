@@ -119,7 +119,10 @@ public class BookingController {
     @GetMapping("payment/vnpay-return")
     public String returnPayment(HttpServletRequest request, Model model){
         int paymentStatus = paymentService.VNPayReturn(request);
-        System.out.println("paymentStatus = " + paymentStatus);
+        model.addAttribute("orderId", request.getParameter("vnp_OrderInfo"));
+        model.addAttribute("totalPrice", request.getParameter("vnp_Amount"));
+        model.addAttribute("paymentTime", request.getParameter("vnp_PayDate"));
+        model.addAttribute("transactionId", request.getParameter("vnp_TransactionNo"));
         model.addAttribute("step",4);
         return paymentStatus == 1 ? "pages/booking" : "redirect:/";
     }

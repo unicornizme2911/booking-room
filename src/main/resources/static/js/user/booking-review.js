@@ -153,8 +153,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 bookerEmail.focus();
                 return;
             }
-            // In real Spring Boot: form submission via th:action
-            alert('Proceeding to payment...');
+            window.redirect.href = `/booking/payment?reservationId=${reservationId}`;
         });
     }
 

@@ -175,7 +175,6 @@ window.initCategoryAvailable = function (e) {
                 nights: nights,
                 categories: categories
             }
-            console.log(payload);
             fetch('/booking/review', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
