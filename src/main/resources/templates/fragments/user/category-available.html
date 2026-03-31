@@ -112,4 +112,49 @@
             </div>
         </div>
     </div>
+
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <button class="modal-close" id="modalClose">&times;</button>
+
+            <div class="modal-content">
+                <!-- Images Section -->
+                <div class="modal-images">
+                    <div class="main-image">
+                        <img id="mainImage" src="" alt="Hotel main image">
+                    </div>
+                    <div class="side-images">
+                        <img id="sideImage1" src="" alt="Hotel side image 1">
+                        <img id="sideImage2" src="" alt="Hotel side image 2">
+                    </div>
+                </div>
+
+                <!-- Details Section -->
+                <div class="modal-details">
+                    <!-- Hotel Title and Location -->
+                    <div class="hotel-header">
+                        <h1 id="hotelTitle"></h1>
+                        <p id="hotelLocation" class="hotel-location"></p>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="description-section">
+                        <h2>About the place</h2>
+                        <p id="hotelDescription"></p>
+                    </div>
+
+                    <!-- Booking Section -->
+                    <div class="booking-section">
+                        <h2>Start Booking</h2>
+                        <div class="price-box">
+                            <span id="hotelPrice" class="price-amount">$200</span>
+                            <span class="price-label">per Day</span>
+                        </div>
+                    </div>
+                    <!-- Amenities -->
+                    <div class="amenities-section"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 </th:block>

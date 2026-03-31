@@ -29,7 +29,6 @@ public class LogoutService implements LogoutHandler {
                 }
             }
         }
-        System.out.println("refreshToken: " + refreshToken);
         if (refreshToken == null) return;
         TokenModel storedToken = tokenRepository.findByToken(refreshToken)
                 .orElse(null);

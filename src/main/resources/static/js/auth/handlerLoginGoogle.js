@@ -12,8 +12,6 @@ $(document).ready(function () {
             data: email,
             contentType: "application/json",
             success: function (data) {
-                console.log(data)
-                localStorage.setItem('token', data.access_token);
                 window.location.href = "/"
             },
             error: function (error) {

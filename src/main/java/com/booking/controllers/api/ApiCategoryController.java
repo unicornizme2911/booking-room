@@ -22,8 +22,8 @@ class ApiCategoryController {
         return ResponseEntity.ok().body(categoryService.getAll());
     }
 
-    @GetMapping("/id")
-    public ResponseEntity<CategoryResponse> getCategoryById(@RequestParam String id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<CategoryResponse> getCategoryById(@PathVariable String id) {
         return ResponseEntity.ok().body(categoryService.getById(id));
     }
 

@@ -11,6 +11,17 @@ window.initCategoryAvailable = function (e) {
     let totalAmount = 0;
     let bookingState = {};
 
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalClose = document.getElementById('modalClose');
+    const viewButtons = document.querySelectorAll('.btn-details');
+    const mainImage = document.getElementById("mainImage");
+    const sideImage1 = document.getElementById("sideImage1");
+    const sideImage2 = document.getElementById("sideImage2");
+
+    const hotelTitle = document.getElementById("hotelTitle");
+    const hotelDescription = document.getElementById("hotelDescription");
+    const hotelPrice = document.getElementById("hotelPrice");
+
     let totalAmountDisplay = document.getElementById('totalAmount');
 
     const container = document.querySelector('.category-container')
@@ -185,5 +196,63 @@ window.initCategoryAvailable = function (e) {
                 });
         });
     }
+
+    viewButtons.forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            const card = btn.closest('.category-card');
+            const id = card.dataset.categoryId;
+            try {
+                const res = await fetch(`/api/categories/${id}`);
+                const data = await res.json();
+                console.log(data);
+                hotelTitle.innerText = data.name;
+                hotelDescription.innerText = data.description;
+                hotelPrice.innerText = data.price + " VNĐ";
+
+                if (data.images && data.images.length > 0) {
+                    mainImage.src = data.images[0];
+                    sideImage1.src = data.images[1] || data.images[0];
+                    sideImage2.src = data.images[2] || data.images[0];
+                }
+                const amenitiesContainer = document.querySelector(".amenities-section");
+                amenitiesContainer.innerHTML = "";
+
+                data.features.forEach(f => {
+                    const div = document.createElement("div");
+                    div.className = "amenity-item";
+                    div.innerHTML = `
+                        <span class="amenity-icon">
+                            <i class="fa fa-${f.icon}"></i>
+                        </span>
+                        <p>${f.name}</p>
+                    `;
+                    amenitiesContainer.appendChild(div);
+                });
+                modalOverlay.classList.add("active");
+
+            } catch (err) {
+                console.error(err);
+            }
+        })
+    })
+
+    function closeModal() {
+        modalOverlay.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+
+    modalClose.addEventListener('click', closeModal);
+
+    modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) {
+            closeModal();
+        }
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeModal();
+        }
+    });
+
     initGallery();
 }

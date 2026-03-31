@@ -178,7 +178,7 @@ public class UserService implements UserDetailsService {
             tokenValid = token.getToken();
         }
         return AuthenticationResponse.builder()
-                .accessToken(tokenValid)
+                .refreshToken(tokenValid)
                 .build();
     }
 }

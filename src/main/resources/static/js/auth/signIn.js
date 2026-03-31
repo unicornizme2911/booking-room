@@ -52,11 +52,6 @@ $(document).ready(function () {
     showPassword.on("change", function (e) {
         password.attr("type", this.checked ? "text" : "password");
     })
-    //
-    // if (localStorage.getItem("email") !== null) {
-    //     email.val(localStorage.getItem("email"));
-    //     localStorage.removeItem("email");
-    // }
 
     function loginSuccess(token) {
         if (token) {
