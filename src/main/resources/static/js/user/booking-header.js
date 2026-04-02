@@ -333,6 +333,11 @@ document.addEventListener('DOMContentLoaded', function (e) {
             const container = document.querySelector('.booking-steps');
             if (!container) return;
             showLoading(container);
+            const state = {
+                checkIn: checkinDate,
+                checkOut: checkoutDate,
+                nights: calculateNights()
+            }
             fetch(`/booking/search?fromDate=${checkin}&toDate=${checkout}&rooms=${guests.rooms}&adults=${guests.adults}&children=${guests.children}`, {
                 method: 'GET'
             })
@@ -340,7 +345,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
                 .then(html => {
                     container.innerHTML = html;
                     if (window.initCategoryAvailable) {
-                        window.initCategoryAvailable();
+                        window.initCategoryAvailable(state);
                     }
                 });
         });

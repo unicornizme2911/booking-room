@@ -59,12 +59,14 @@ public class BookingController {
             @RequestBody BookingPreviewRequest request
     ){
         var reservation = reservationService.preview(request);
+        System.out.println(reservation);
         return ResponseEntity.ok().body(reservation);
     }
 
     @GetMapping("/review")
     public String reviewPage(@RequestParam Long reservationId, Model model){
         var reservation = reservationService.get(reservationId);
+        System.out.println(reservation);
         LocalDate checkIn = reservation.getCheck_in().toInstant()
                 .atZone(ZoneId.systemDefault())
                 .toLocalDate();
@@ -76,8 +78,8 @@ public class BookingController {
         long nights = ChronoUnit.DAYS.between(checkIn, checkOut);
         double total = reservation.getRooms().stream().mapToDouble(r -> r.getCategory().getPrice()).sum();
         model.addAttribute("step", 2);
-        model.addAttribute("checkIn", checkInDay);
-        model.addAttribute("checkOut", checkOutDay);
+        model.addAttribute("checkInDay", checkInDay);
+        model.addAttribute("checkOutDay", checkOutDay);
         model.addAttribute("reservation", reservation);
         model.addAttribute("nights", nights);
         model.addAttribute("total", total*nights);

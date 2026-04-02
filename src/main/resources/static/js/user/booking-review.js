@@ -153,7 +153,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 bookerEmail.focus();
                 return;
             }
-            window.redirect.href = `/booking/payment?reservationId=${reservationId}`;
+            console.log(reservationId);
+            window.location.href = `/booking/payment?reservationId=${reservationId}`;
         });
     }
 

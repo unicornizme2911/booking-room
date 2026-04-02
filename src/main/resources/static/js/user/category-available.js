@@ -4,14 +4,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 })
 
-window.initCategoryAvailable = function (e) {
-    const checkIn = window.BookingState?.checkIn || null;
-    const checkOut = window.BookingState?.checkOut || null;
-    const nights = window.BookingState?.nights || 0;
+window.initCategoryAvailable = function (state) {
+    const checkIn = state?.checkIn || null;
+    const checkOut = state?.checkOut || null;
+    const nights = state?.nights || 0;
+    console.log(checkIn + "  " + checkOut);
     let totalAmount = 0;
     let bookingState = {};
 
-    const modalOverlay = document.getElementById('modalOverlay');
+    const modalOverlay = document.getElementById('modalCategoryOverlay');
     const modalClose = document.getElementById('modalClose');
     const viewButtons = document.querySelectorAll('.btn-details');
     const mainImage = document.getElementById("mainImage");
@@ -186,6 +187,7 @@ window.initCategoryAvailable = function (e) {
                 nights: nights,
                 categories: categories
             }
+            console.log(payload);
             fetch('/booking/review', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -204,7 +206,6 @@ window.initCategoryAvailable = function (e) {
             try {
                 const res = await fetch(`/api/categories/${id}`);
                 const data = await res.json();
-                console.log(data);
                 hotelTitle.innerText = data.name;
                 hotelDescription.innerText = data.description;
                 hotelPrice.innerText = data.price + " VNĐ";
@@ -229,7 +230,7 @@ window.initCategoryAvailable = function (e) {
                     amenitiesContainer.appendChild(div);
                 });
                 modalOverlay.classList.add("active");
-
+                document.body.overflow = "hidden";
             } catch (err) {
                 console.error(err);
             }

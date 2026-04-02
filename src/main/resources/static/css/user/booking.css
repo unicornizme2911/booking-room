@@ -870,25 +870,21 @@
 }
 
 /* Modal */
-.modal-overlay {
-    display: none;
+.modal-category-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.6);
-    z-index: 9999;
     inset: 0;
-    overflow-y: auto;
-    animation: fadeIn 0.3s ease;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    display: none;
+    z-index: 99999;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
 }
 
-.modal-overlay.active {
+.modal-category-overlay.active {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
 }
 
 @keyframes fadeIn {
@@ -901,15 +897,17 @@
 }
 
 /* Modal */
-.modal {
-    background: white;
-    border-radius: 12px;
-    max-width: 1100px;
+.modal-category {
+    display: block;
+    background: #fff;
     width: 100%;
-    margin-top: 40px;
+    max-width: 1100px;
+    max-height: 90vh;
+    border-radius: 12px;
+    overflow-y: auto;
     position: relative;
-    animation: slideUp 0.3s ease;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    animation: scaleIn 0.25s ease;
 }
 
 @keyframes slideUp {
@@ -923,29 +921,21 @@
     }
 }
 
-.modal-close {
+.modal-category .modal-close {
     position: absolute;
-    top: 20px;
-    right: 20px;
-    background: none;
+    top: 10px;
+    right: 15px;
+    font-size: 28px;
     border: none;
-    font-size: 32px;
-    color: #999;
+    background: transparent;
     cursor: pointer;
-    z-index: 10;
-    transition: color 0.3s;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
-.modal-close:hover {
+.modal-category .modal-close:hover {
     color: #333;
 }
 
-.modal-content {
+.modal-category .modal-content {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 40px;
@@ -1045,23 +1035,6 @@
     font-size: 14px;
     color: #999;
     margin-left: 8px;
-}
-
-.book-btn {
-    width: 100%;
-    padding: 14px;
-    background-color: #2563eb;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.book-btn:hover {
-    background-color: #1d4ed8;
 }
 
 /* Amenities Section */
