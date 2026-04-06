@@ -2,6 +2,7 @@ package com.booking.controllers.api;
 
 import com.booking.dto.request.ReservationRequest;
 import com.booking.dto.response.ReservationResponse;
+import com.booking.models.ReservationStatus;
 import com.booking.services.ReservationService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ class ApiReservationController {
     @PostMapping("/cancel/{id}")
     @Transactional
     public ResponseEntity<ReservationResponse> cancel(@PathVariable Long id){
-        var reservation = reservationService.setStatus(id, "CANCELLED");
+        var reservation = reservationService.setStatus(id, ReservationStatus.CANCELLED);
         return ResponseEntity.ok().body(reservation);
     }
 }

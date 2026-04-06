@@ -4,6 +4,8 @@ import com.booking.configuration.VNPayConfig;
 import com.booking.dto.request.PaymentRequest;
 import com.booking.dto.request.VNPayRequest;
 import com.booking.models.PaymentModel;
+import com.booking.models.PaymentStatus;
+import com.booking.models.ReservationStatus;
 import com.booking.repository.PaymentRepository;
 import com.booking.repository.ReservationRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,7 +36,7 @@ public class PaymentService {
         paymentModel.setTxnRef(request.getTxnRef());
         paymentModel.setReservation(reservation);
         paymentModel.setTotal(request.getTotal());
-        paymentModel.setStatus("PENDING");
+        paymentModel.setStatus(PaymentStatus.PENDING);
         paymentModel.setProvider(request.getProvider());
         paymentModel.setCreatedAt(LocalDateTime.now());
         paymentRepository.save(paymentModel);
@@ -148,16 +150,16 @@ public class PaymentService {
                     .orElseThrow();
             String responseCode = fields.get("vnp_ResponseCode");
             if ("00".equals(responseCode)) {
-                payment.setStatus("SUCCESS");
+                payment.setStatus(PaymentStatus.SUCCESS);
                 payment.setTransactionNo(fields.get("vnp_TransactionNo"));
                 payment.setPaidAt(LocalDateTime.now());
-                reservation.setStatus("CONFIRMED");
+                reservation.setStatus(ReservationStatus.CONFIRMED);
                 paymentRepository.save(payment);
                 reservationRepository.save(reservation);
                 return 1;
             } else {
-                payment.setStatus("FAILED");
-                reservation.setStatus("CANCELLED");
+                payment.setStatus(PaymentStatus.FAILED);
+                reservation.setStatus(ReservationStatus.CANCELLED);
                 paymentRepository.save(payment);
                 reservationRepository.save(reservation);
                 return 0;

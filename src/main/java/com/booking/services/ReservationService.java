@@ -52,7 +52,7 @@ public class ReservationService {
                 .id(request.getId())
                 .check_in(request.getCheck_in())
                 .check_out(request.getCheck_out())
-                .status(request.getStatus())
+                .status(ReservationStatus.valueOf(request.getStatus()))
                 .build();
     }
 
@@ -159,7 +159,7 @@ public class ReservationService {
         ReservationModel reservation = new ReservationModel();
         reservation.setCheck_in(request.getFromDate());
         reservation.setCheck_out(request.getToDate());
-        reservation.setStatus("HOLD");
+        reservation.setStatus(ReservationStatus.HOLD);
         reservation.setExpiredAt(LocalDateTime.now().plusMinutes(10));
         reservationRepository.save(reservation);
         for (RoomModel room: lockedRooms) {
@@ -192,7 +192,7 @@ public class ReservationService {
             throw new RuntimeException("Reservation expired");
         }
 
-        res.setStatus("CONFIRMED");
+        res.setStatus(ReservationStatus.CONFIRMED);
     }
 
     public ReservationResponse get(Long id){
@@ -200,9 +200,9 @@ public class ReservationService {
         return toResponse(reservation);
     }
 
-    public ReservationResponse setStatus(Long id, String status){
+    public ReservationResponse setStatus(Long id, ReservationStatus status){
         var reservation = reservationRepository.findById(String.valueOf(id)).orElseThrow();
-        if ("HOLD".equalsIgnoreCase(reservation.getStatus())){
+        if (reservation.getStatus().isHold()){
             reservation.setStatus(status);
             reservationRepository.save(reservation);
         }
@@ -223,7 +223,7 @@ public class ReservationService {
     public void cancel(){
         List<ReservationModel> reservations = reservationRepository
                 .findByStatusAndExpiredAtBefore("HOLD",LocalDateTime.now());
-        reservations.forEach(reservation -> reservation.setStatus("CANCELLED"));
+        reservations.forEach(reservation -> reservation.setStatus(ReservationStatus.CANCELLED));
     }
 
     @Scheduled(fixedRate = 60000)
@@ -231,7 +231,7 @@ public class ReservationService {
         List<ReservationModel> expired = reservationRepository
                 .findByStatusAndExpiredAtBefore("HOLD",LocalDateTime.now());
         for (var r : expired) {
-            r.setStatus("EXPIRED");
+            r.setStatus(ReservationStatus.CANCELLED);
             reservationRoomRepository.deleteByReservation(r);
         }
         reservationRepository.saveAll(expired);

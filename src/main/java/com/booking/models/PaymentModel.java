@@ -24,7 +24,9 @@ public class PaymentModel {
 
     private Long total;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private PaymentStatus status;
 
     private String provider;
 

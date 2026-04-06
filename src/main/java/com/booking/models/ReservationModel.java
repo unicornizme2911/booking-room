@@ -26,8 +26,9 @@ public class ReservationModel {
     private Date check_out;
     private String phone;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String status;
+    private ReservationStatus status;
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime expiredAt;
