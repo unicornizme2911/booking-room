@@ -1,0 +1,67 @@
+<div class="hero" th:fragment="hero" id="hero">
+
+    <!-- Background image -->
+    <div class="hero__bg">
+        <img src="https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=1600" alt="Maldives overwater bungalows" />
+        <div class="hero__overlay"></div>
+    </div>
+
+    <!-- Content card -->
+    <div class="container hero__content">
+        <div class="hero__card fade-up">
+            <h1 class="hero__heading">
+                Good Morning!
+                <span class="hero__sub-heading">Explore beautiful places in the world with Acenda</span>
+            </h1>
+
+            <!-- Search bar -->
+            <form class="search-bar" id="searchForm" th:action="@{/search}" method="get">
+
+                <div class="search-bar__divider"></div>
+
+                <div class="search-bar__field">
+                    <span class="search-bar__icon">📅</span>
+                    <div class="search-bar__input-wrap">
+                        <label>Check in</label>
+                        <input type="date" name="checkin" />
+                    </div>
+                </div>
+
+                <div class="search-bar__divider"></div>
+
+                <div class="search-bar__field">
+                    <span class="search-bar__icon">📅</span>
+                    <div class="search-bar__input-wrap">
+                        <label>Check out</label>
+                        <input type="date" name="checkout" />
+                    </div>
+                </div>
+
+                <div class="search-bar__divider"></div>
+
+                <div class="search-bar__field">
+                    <span class="search-bar__icon">👥</span>
+                    <div class="search-bar__input-wrap">
+                        <label>Adults</label>
+                        <input type="number" name="adults" placeholder="Add adults" min="1" max="20" />
+                    </div>
+                </div>
+
+                <div class="search-bar__field">
+                    <span class="search-bar__icon">👥</span>
+                    <div class="search-bar__input-wrap">
+                        <label>Children</label>
+                        <input type="number" name="children" placeholder="Add children" min="1" max="20" />
+                    </div>
+                </div>
+
+                <button type="submit" class="search-bar__btn" aria-label="Search">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                    </svg>
+                </button>
+            </form>
+        </div>
+    </div>
+
+</div>

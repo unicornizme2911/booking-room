@@ -1,12 +1,20 @@
+<!DOCTYPE html>
 <html lang="en" xmlns="http://www.thymeleaf.org">
     <th:block th:insert="~{/fragments/heading/heading :: heading(title='Home')}"/>
+    <link rel="stylesheet" th:href="@{/css/home/hero.css}">
+    <link rel="stylesheet" th:href="@{/css/home/why-us.css}">
+    <link rel="stylesheet" th:href="@{/css/home/partners.css}">
     <body>
-    <div class="container-fluid position-relative m-0 p-0">
-        <th:block th:insert="~{fragments/util/header :: header}"/>
-        <th:block th:insert="~{fragments/home/home :: home}"/>
-    </div>
-    <th:block th:insert="~{fragments/util/footer :: footer}"/>
-    <th:block th:insert="~{fragments/scripts/scripts :: scripts}"/>
-    <script th:src="@{/js/util/home.js}"></script>
+        <div>
+            <th:block th:replace="~{/fragments/util/header :: header}"/>
+        </div>
+        <main>
+            <th:block th:insert="~{fragments/home/hero :: hero}"/>
+            <th:block th:insert="~{fragments/home/why-us :: whyUs}"/>
+            <th:block th:insert="~{fragments/home/partners :: partners}"/>
+        </main>
+        <th:block th:insert="~{fragments/util/footer :: footer}"/>
+        <th:block th:insert="~{fragments/scripts/scripts :: scripts}"/>
+        <script th:src="@{/js/util/home.js}"></script>
     </body>
 </html>

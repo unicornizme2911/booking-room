@@ -222,14 +222,14 @@ public class ReservationService {
     @Transactional
     public void cancel(){
         List<ReservationModel> reservations = reservationRepository
-                .findByStatusAndExpiredAtBefore("HOLD",LocalDateTime.now());
+                .findByStatusAndExpiredAtBefore(ReservationStatus.HOLD,LocalDateTime.now());
         reservations.forEach(reservation -> reservation.setStatus(ReservationStatus.CANCELLED));
     }
 
     @Scheduled(fixedRate = 60000)
     public void releaseExpiredReservations() {
         List<ReservationModel> expired = reservationRepository
-                .findByStatusAndExpiredAtBefore("HOLD",LocalDateTime.now());
+                .findByStatusAndExpiredAtBefore(ReservationStatus.HOLD,LocalDateTime.now());
         for (var r : expired) {
             r.setStatus(ReservationStatus.CANCELLED);
             reservationRoomRepository.deleteByReservation(r);

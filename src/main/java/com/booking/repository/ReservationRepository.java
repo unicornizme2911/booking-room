@@ -1,6 +1,7 @@
 package com.booking.repository;
 
 import com.booking.models.ReservationModel;
+import com.booking.models.ReservationStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -27,5 +28,5 @@ public interface ReservationRepository extends JpaRepository<ReservationModel,St
     """)
     boolean existsConflict(Long roomId, Date fromDate, Date toDate);
 
-    List<ReservationModel> findByStatusAndExpiredAtBefore(String status, LocalDateTime time);
+    List<ReservationModel> findByStatusAndExpiredAtBefore(ReservationStatus status, LocalDateTime time);
 }

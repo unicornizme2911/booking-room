@@ -1,4 +1,4 @@
-<th:block th:fragment="categoryList">
+<th:block th:fragment="categoryList" class="booking">
     <div class="main-content">
         <div class="category-container">
             <div class="hotel-header">
@@ -104,7 +104,7 @@
                                     </svg>
                                     Select Room
                                 </button>
-                                <div class="room-dropdown hidden"></div>
+                                <div class="room-dropdown bk-hidden"></div>
                             </div>
                         </div>
                     </div>
@@ -113,11 +113,11 @@
         </div>
     </div>
 
-    <div class="modal-category-overlay" id="modalCategoryOverlay">
-        <div class="modal-category">
-            <button class="modal-close" id="modalClose">&times;</button>
+    <div class="bk-modal-overlay" id="modalCategoryOverlay">
+        <div class="bk-modal">
+            <button class="bk-modal-close" id="modalClose">&times;</button>
 
-            <div class="modal-content">
+            <div class="bk-modal-body">
                 <!-- Images Section -->
                 <div class="modal-images">
                     <div class="main-image">
