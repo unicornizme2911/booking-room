@@ -4,6 +4,8 @@
     <link rel="stylesheet" th:href="@{/css/home/hero.css}">
     <link rel="stylesheet" th:href="@{/css/home/why-us.css}">
     <link rel="stylesheet" th:href="@{/css/home/partners.css}">
+    <link rel="stylesheet" th:href="@{/css/home/feedbacks.css}">
+    <link rel="stylesheet" th:href="@{/css/home/news.css}">
     <body>
         <div>
             <th:block th:replace="~{/fragments/util/header :: header}"/>
@@ -12,6 +14,8 @@
             <th:block th:insert="~{fragments/home/hero :: hero}"/>
             <th:block th:insert="~{fragments/home/why-us :: whyUs}"/>
             <th:block th:insert="~{fragments/home/partners :: partners}"/>
+            <th:block th:insert="~{fragments/home/feedbacks :: feedbacks}"/>
+            <th:block th:insert="~{fragments/home/news :: news}"/>
         </main>
         <th:block th:insert="~{fragments/util/footer :: footer}"/>
         <th:block th:insert="~{fragments/scripts/scripts :: scripts}"/>

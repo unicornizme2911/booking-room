@@ -1,100 +1,52 @@
-<footer th:fragment="footer" class="footer position-absolute" th:style="'bottom: ' + ${bottom}">
-    <div class="line"></div>
-
-    <!-- Section: Links  -->
-    <section class="">
-        <div class="container mx-6 mt-5">
-            <!-- Grid row -->
-            <div class="footer__content row mt-3">
-                <!-- Grid column -->
-                <div class="footer__content__input col-md-4 col-sm-10 col-10">
-                    <!--                    <img-->
-                    <!--                            th:src="@{/images/productImage.jpg}"-->
-                    <!--                            class="w-75"-->
-                    <!--                    />-->
-                    <div class="h2 pt-2">
-                        Sign up for our newsletter
-                    </div>
-                    <div class="pb-2" style="font-size: 0.8rem;">
-                        Be the first to know about our special offers, news, and updates.
-                    </div>
-                    <div class="d-flex flex-column mt-3" style="border: 1px solid gray">
-                        <form class="d-flex justify-content-center input-group" action="/" method="POST" id="formEmailCheckUser">
-                            <input type="email" id="email" class="form-control border-0"
-                                   style="border-radius: 0; background-color: transparent" placeholder="Email Address"/>
-                            <input type="submit" class="btn fw-bold" style="border-radius: 0" value="Sign Up">
-                        </form>
-                    </div>
-                </div>
-                <!-- Grid column -->
-                <div class="footer__content__infomation col-8">
-                    <div class="row mt-md-0 mt-2">
-                        <!-- Grid column -->
-                        <div class="footer__links col-md-2 col-md-2 col-sm-2 col-6 mx-auto mb-4">
-                            <!-- Links -->
-                            <h6 class="fw-bold mb-4">
-                                Links
-                            </h6>
-                            <p>
-                                <a th:href="@{/}" class="footer__links text-reset text-decoration-none">Home</a>
-                            </p>
-                            <p>
-                                <a th:href="@{/products}" class="footer__links text-reset text-decoration-none">Store</a>
-                            </p>
-                            <p>
-                                <a th:href="@{/about}" class="footer__links text-reset text-decoration-none">About</a>
-                            </p>
-                            <p>
-                                <a th:href="@{/contact}"
-                                   class="footer__links text-reset text-decoration-none">Contact</a>
-                            </p>
-                        </div>
-                        <!-- Grid column -->
-
-                        <!-- Grid column -->
-                        <div class="footer__links col-md-2 col-md-2 col-sm-2 col-6 mx-auto mb-4">
-                            <!-- Links -->
-                            <h6 class="fw-bold mb-4">
-                                Categories
-                            </h6>
-                            <p>
-                                <a href="/products?type=422ebae2-8de9-4692-93ad-5f5c7c10fa81" class="text-reset text-decoration-none">Frames</a>
-                            </p>
-                            <p>
-                                <a href="/products?type=6856b3fb-372d-4b06-a901-1e7d5718e80e" class="text-reset text-decoration-none">Sunglasses</a>
-                            </p>
-                            <p>
-                                <a href="/products?type=84dfba28-719e-4fe5-a345-b671be6c0128" class="text-reset text-decoration-none">Accessories</a>
-                            </p>
-                        </div>
-                        <!-- Grid column -->
-
-                        <!-- Grid column -->
-                        <div class="footer__links col-md-2 col-md-2 col-sm-2 col-6 mx-auto mb-4">
-                            <!-- Links -->
-                            <h6 class="fw-bold mb-4">Social</h6>
-                            <p>
-                                <a href="https://www.facebook.com/" target="_blank" class="text-reset text-decoration-none">Facebook</a>
-                            </p>
-                            <p>
-                                <a href="https://www.instagram.com/" target="_blank" class="text-reset text-decoration-none">Instagram</a>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Grid column -->
+<footer th:fragment="footer" class="footer">
+    <div class="container footer__inner">
+        <div class="footer__col footer__col--brand">
+            <a href="/" class="footer__logo">✦ Acenda</a>
+            <p>Discover your perfect getaway. We curate the world's finest stays so your only job is to enjoy.</p>
+            <div class="footer__social">
+                <a href="#" class="footer__social-icon">f</a>
+                <a href="#" class="footer__social-icon">𝕏</a>
+                <a href="#" class="footer__social-icon">◎</a>
+                <a href="#" class="footer__social-icon">in</a>
             </div>
-            <!-- Grid row -->
         </div>
-    </section>
-    <!-- Section: Links  -->
-
-    <!-- Copyright -->
-    <div class="footer__copyright text-center p-4 mt-5">
-        © 2023 COPYRIGHTS SEESAW
+        <div class="footer__col">
+            <h5>Support</h5>
+            <ul>
+                <li><a href="/help">Help Center</a></li>
+                <li><a href="/refund">Refund Policy</a></li>
+                <li><a href="/cancellation">Cancellation Options</a></li>
+                <li><a href="/report">Report a Concern</a></li>
+            </ul>
+        </div>
+        <div class="footer__col">
+            <h5>Company</h5>
+            <ul>
+                <li><a href="/about">About Us</a></li>
+                <li><a href="/careers">Careers</a></li>
+                <li><a href="/privacy">Privacy Policy</a></li>
+                <li><a href="/blog">Company Blog</a></li>
+            </ul>
+        </div>
+        <div class="footer__col">
+            <h5>Contact</h5>
+            <ul>
+                <li><a href="mailto:hello@acenda.com">hello@acenda.com</a></li>
+                <li><a href="/faq">FAQ</a></li>
+                <li><a href="/partnerships">Partnerships</a></li>
+            </ul>
+        </div>
     </div>
-    <!-- Copyright -->
+    <div class="footer__bottom">
+        <div class="container footer__bottom-inner">
+            <span>© 2025 COPYRIGHTS ACENDA</span>
+            <div class="footer__payments">
+                <span class="payment-chip">VISA</span>
+                <span class="payment-chip">MC</span>
+                <span class="payment-chip">PayPal</span>
+                <span class="payment-chip">Stripe</span>
+            </div>
+        </div>
+    </div>
     <th:block th:insert="~{fragments/scripts/scripts :: scripts}"/>
-    <script th:src="@{/js/auth/checkMail.js}"></script>
 </footer>

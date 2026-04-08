@@ -1,0 +1,52 @@
+<section th:fragment="feedbacks" class="feedbacks" id="feedbacks">
+    <div class="feedbacks__bg">
+        <img src="https://images.unsplash.com/photo-1439130490301-25e322d88054?w=1600" alt="" />
+        <div class="feedbacks__overlay"></div>
+    </div>
+    <div class="container">
+        <div class="section-header--row fade-up">
+            <div><span class="tag tag--light">Reviews</span><h2 class="section-title" style="color:#fff">Feedbacks</h2></div>
+            <div class="carousel-controls">
+                <button class="carousel-btn carousel-btn--light" id="testPrev">&#8249;</button>
+                <button class="carousel-btn carousel-btn--light" id="testNext">&#8250;</button>
+            </div>
+        </div>
+        <div class="test-carousel">
+            <div class="test-track" id="testTrack">
+                <div class="test-card fade-up">
+                    <div class="test-card__avatar">S</div>
+                    <div class="test-card__content">
+                        <div class="test-card__header"><h5>Sebastian</h5><div class="stars">★★★★★</div></div>
+                        <p class="test-card__role">Villa Collector</p>
+                        <p class="test-card__text">Lorem ipsum is simply dummy text of the printing and typesetting industry. It has been the standard since the 1500s.</p>
+                    </div>
+                </div>
+                <div class="test-card fade-up" style="--delay:.12s">
+                    <div class="test-card__avatar test-card__avatar--rose">E</div>
+                    <div class="test-card__content">
+                        <div class="test-card__header"><h5>Evangeline</h5><div class="stars">★★★★★</div></div>
+                        <p class="test-card__role">Frequent Traveller</p>
+                        <p class="test-card__text">Lorem ipsum is simply dummy text of the printing and typesetting industry. It has been the standard since the 1500s.</p>
+                    </div>
+                </div>
+                <div class="test-card fade-up" style="--delay:.24s">
+                    <div class="test-card__avatar test-card__avatar--gold">A</div>
+                    <div class="test-card__content">
+                        <div class="test-card__header"><h5>Alexander</h5><div class="stars">★★★★★</div></div>
+                        <p class="test-card__role">Hotel Enthusiast</p>
+                        <p class="test-card__text">Lorem ipsum is simply dummy text of the printing and typesetting industry. It has been the standard since the 1500s.</p>
+                    </div>
+                </div>
+                <div class="test-card fade-up" style="--delay:.36s">
+                    <div class="test-card__avatar test-card__avatar--teal">M</div>
+                    <div class="test-card__content">
+                        <div class="test-card__header"><h5>Monica</h5><div class="stars">★★★★★</div></div>
+                        <p class="test-card__role">Luxury Seeker</p>
+                        <p class="test-card__text">Lorem ipsum is simply dummy text of the printing and typesetting industry. It has been the standard since the 1500s.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="carousel-dots carousel-dots--light" id="testDots"></div>
+    </div>
+</section>
