@@ -1,50 +1,102 @@
+<!--<main th:fragment="signin" class="signin">-->
+<!--    <div class="container-fluid">-->
+<!--        <div class="row justify-content-center align-items-center m-5">-->
+<!--            <div class="offset-3"></div>-->
+
+<!--            <div class="d-flex justify-content-center text-center flex-column col-6">-->
+<!--                <div class="title h4 text-uppercase">Login</div>-->
+<!--                <form action="/" class="form d-flex flex-column" id="formSignIn">-->
+<!--                    <div class="input-group pb-3">-->
+<!--                        <input type="email" id="email" name="email" class="form-control border-1 rounded-0"-->
+<!--                               placeholder="Email"-->
+<!--                               style="min-height: 3rem">-->
+<!--                    </div>-->
+
+<!--                    <div class="input-group pb-3">-->
+<!--                        <input type="password" name="password" class="form-control border-1 rounded-0" id="password"-->
+<!--                               placeholder="Password" style="min-height: 3rem">-->
+<!--                    </div>-->
+
+<!--                    <span class="error mb-3 text-danger"></span>-->
+
+<!--                    <div class="d-flex justify-content-between align-items-center pt-2 pb-5">-->
+<!--                        <div class="">-->
+<!--                            <input type="checkbox" name="check" id="remember-me" class="me-2"> Remember me-->
+<!--                        </div>-->
+
+<!--                        <div class="">-->
+<!--                            <input type="checkbox" name="check" id="show-password" class="me-2"> Show Password-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    <div class="d-flex justify-content-between align-items-center">-->
+<!--                        <div class="actions d-flex flex-column align-items-start gap-2">-->
+<!--                            <a class="text-dark" th:href="@{/auth/forgot-password}">Forgot your password?</a>-->
+<!--                            <a class="text-dark" th:href="@{/auth/register}">Create account</a>-->
+<!--                            <a th:href="@{/auth/login-google}" class="text-dark">Login with Google</a>-->
+<!--                        </div>-->
+
+<!--                        <div>-->
+<!--                            <button type="submit" class="btn text-uppercase p-3 w-100 px-5 text-dark border-0 rounded-0"-->
+<!--                                    style="background-color: #E3C5B8">Login-->
+<!--                            </button>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </form>-->
+<!--            </div>-->
+<!--            <div class="offset-3"></div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</main>-->
+
 <main th:fragment="signin" class="signin">
-    <div class="container-fluid">
-        <div class="row justify-content-center align-items-center m-5">
-            <div class="offset-3"></div>
-
-            <div class="d-flex justify-content-center text-center flex-column col-6">
-                <div class="title h4 text-uppercase">Login</div>
-                <form action="/" class="form d-flex flex-column" id="formSignIn">
-                    <div class="input-group pb-3">
-                        <input type="email" id="email" name="email" class="form-control border-1 rounded-0"
-                               placeholder="Email"
-                               style="min-height: 3rem">
-                    </div>
-
-                    <div class="input-group pb-3">
-                        <input type="password" name="password" class="form-control border-1 rounded-0" id="password"
-                               placeholder="Password" style="min-height: 3rem">
-                    </div>
-
-                    <span class="error mb-3 text-danger"></span>
-
-                    <div class="d-flex justify-content-between align-items-center pt-2 pb-5">
-                        <div class="">
-                            <input type="checkbox" name="check" id="remember-me" class="me-2"> Remember me
-                        </div>
-
-                        <div class="">
-                            <input type="checkbox" name="check" id="show-password" class="me-2"> Show Password
-                        </div>
-                    </div>
-
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="actions d-flex flex-column align-items-start gap-2">
-                            <a class="text-dark" th:href="@{/auth/forgot-password}">Forgot your password?</a>
-                            <a class="text-dark" th:href="@{/auth/register}">Create account</a>
-                            <a th:href="@{/auth/login-google}" class="text-dark">Login with Google</a>
-                        </div>
-
-                        <div>
-                            <button type="submit" class="btn text-uppercase p-3 w-100 px-5 text-dark border-0 rounded-0"
-                                    style="background-color: #E3C5B8">Login
-                            </button>
-                        </div>
-                    </div>
-                </form>
+    <div class="auth-wrapper">
+        <div class="auth-card">
+            <!-- Left Panel -->
+            <div class="auth-left" style="background-image: url('../uploads/poster.png')">
+                <div class="brand-card">
+                    <span class="brand-title">Acenda</span><span class="brand-stay">Stay.</span>
+                </div>
             </div>
-            <div class="offset-3"></div>
+
+            <!-- Right Panel -->
+            <div class="auth-right">
+                <div class="auth-form-container">
+                    <h2 class="auth-title">Login Account</h2>
+
+                    <form action="/" class="form" id="formSignIn">
+                        <div class="form-group">
+                            <label for="email">Username</label>
+                            <input type="email" id="email" name="email"
+                                   class="form-input" placeholder="Username">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <div class="input-password-wrapper">
+                                <input type="password" name="password" id="password"
+                                       class="form-input" placeholder="6+ characters">
+                                <button type="button" class="toggle-password" id="togglePassword">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                              d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <span class="error text-danger"></span>
+
+                        <p class="terms-text">
+                            By signing up you agree to <a href="#" class="terms-link">terms and conditions</a> at zoho.
+                        </p>
+
+                        <button type="submit" class="btn-primary">Login</button>
+
+                        <a th:href="@{/auth/register}" class="link-secondary">Create Account</a>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </main>

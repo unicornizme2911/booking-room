@@ -50,6 +50,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(email);
                 if (userDetails != null && jwtService.isTokenValid(accessToken, userDetails)) {
                     setAuthentication(userDetails, request);
+                    filterChain.doFilter(request, response);
+                    return;
                 }
             }
         }else{
@@ -61,6 +63,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     if (email != null && jwtService.isTokenValid(refreshToken, userDetails)) {
                         var newAccessToken = jwtService.generateToken(userDetails);
                         createAccessTokenCookie(newAccessToken, response);
+                        setAuthentication(userDetails, request);
                     }
                 }
             } catch (Exception ex) {

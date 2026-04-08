@@ -50,7 +50,6 @@ public class SecurityConfig {
             "/contact/**",
             "/about/**",
             "/admin",
-            "/cart",
             "/contact",
             "/about",
             "/search",
@@ -72,7 +71,6 @@ public class SecurityConfig {
             "/configuration/security",
             "/swagger-ui/**",
             "/swagger-ui.html",
-            "/api/**",
             "/uploads/**",
     };
 

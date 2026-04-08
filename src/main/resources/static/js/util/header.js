@@ -1,67 +1,42 @@
-$(document).ready(function (e) {
-    const btnPerson = $('.btn-person')
-    const btnCheck = $('#btn-check')
-    const checkToken = $('.check-token')
-    const ulDisplay = $('.ul-display')
-    const checkAuth = $('.check-auth')
+document.addEventListener("DOMContentLoaded", function() {
+    const guestSection = document.getElementById('guestSection')
+    const userSection = document.getElementById('userSection')
+    const usernameEl = document.getElementById('username')
+    const dropdown = document.getElementById('userDropdown')
 
-    function redirectIfNotLogin(url) {
-        $.ajax({
-            url: "/api/v1/auth/me",
-            type: "GET",
-            xhrFields: {
-                withCredentials: true
-            },
-            success: function () {
-                window.location.href = url
-            },
-            error: function () {
-                window.location.href = "/auth/login"
-            }
-        })
+    fetch("/api/v1/auth/me", {
+        method: 'GET',
+        credentials: "include"
+    }).then(res => {
+        if (!res.ok) return null;
+        return res.json();
+    }).then(user => {
+        if (!user) throw new Error('Not Found');
+        guestSection.classList.add('hidden');
+        userSection.classList.remove('hidden');
+        usernameEl.innerText = user.lastname || user.email;
+    }).catch(() => {
+        guestSection.classList.remove('hidden');
+        userSection.classList.add('hidden');
+    });
 
-    }
-    checkAuth.on('click', (e) => {
-        e.preventDefault()
-        redirectIfNotLogin('/cart')
+    userSection?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdown.classList.toggle('show');
     })
 
-    checkToken.on('click', function (e) {
-        e.preventDefault()
-        $.ajax({
-            url: "/api/v1/auth/me",
-            type: "GET",
-            xhrFields: {
-                withCredentials: true
-            },
-            success: function () {
-                ulDisplay.removeClass('d-none')
-            },
-            error: function () {
-                window.location.href = "/auth/login"
-            }
-        })
+    document.addEventListener('click', (e) => {
+        dropdown.classList.remove('show');
     })
 
-    btnCheck.on('click', function (e) {
-        e.preventDefault()
-        redirectIfNotLogin('/user/account-setting')
-    })
-
-    btnPerson.on('click', function (e) {
-        e.preventDefault()
-        $.ajax({
-            url: '/api/v1/auth/logout',
-            type: 'POST',
-            xhrFields: {
-                withCredentials: true
-            },
-            success: function () {
-                window.location.href = '/auth/login'
-            },
-            error: function (error) {
-                console.log(error)
-            }
-        })
+    const logoutBtn = document.getElementById('logoutBtn')
+    logoutBtn?.addEventListener('click', (e) => {
+        e.preventDefault();
+        fetch("/api/v1/auth/logout", {
+            method: "POST",
+            credentials: "include"
+        }).then(() => {
+            window.location.href = "/";
+        });
     })
 })

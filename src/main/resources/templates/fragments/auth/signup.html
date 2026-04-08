@@ -1,48 +1,123 @@
+<!--<main th:fragment="signup" class="signup">-->
+<!--    <div class="container-fluid">-->
+<!--        <div class="row justify-content-center align-items-center m-5">-->
+<!--            <div class="offset-3"></div>-->
+
+<!--            <div class="d-flex justify-content-center text-center flex-column col-6">-->
+<!--                <div class="title h4 text-uppercase pb-3">Create Account</div>-->
+<!--                <form action="/" method="post" class="form d-flex flex-column" id="formSignUp">-->
+
+<!--                    <div class="input-group pb-3">-->
+<!--                        <input type="text" name="firstname" class="form-control border-1 rounded-0" id="firstname"-->
+<!--                               placeholder="First Name" style="min-height: 3rem">-->
+<!--                    </div>-->
+
+<!--                    <div class="input-group pb-3">-->
+<!--                        <input type="text" name="lastname" class="form-control border-1 rounded-0" id="lastname"-->
+<!--                               placeholder="Last Name" style="min-height: 3rem">-->
+<!--                    </div>-->
+
+<!--                    <div class="input-group pb-3">-->
+<!--                        <input type="email" name="email" class="form-control border-1 rounded-0" id="email"-->
+<!--                               placeholder="Email" style="min-height: 3rem">-->
+<!--                    </div>-->
+<!--                    <div class="input-group pb-3">-->
+<!--                        <input type="password" name="password" class="form-control border-1 rounded-0" id="password"-->
+<!--                               placeholder="Password" style="min-height: 3rem">-->
+<!--                    </div>-->
+<!--                    <div class="input-group pb-3">-->
+<!--                        <input type="password" name="confirmpassword" class="form-control border-1 rounded-0"-->
+<!--                               id="confirmPassword" placeholder="Confirm Password" style="min-height: 3rem">-->
+<!--                    </div>-->
+
+<!--                    <span class="error pt-3 text-danger"></span>-->
+
+<!--                    <div>-->
+<!--                        <button type="submit" class="btn text-uppercase p-3 px-5 text-dark border-0 rounded-0"-->
+<!--                                style="background-color: #E3C5B8">Create-->
+<!--                        </button>-->
+<!--                    </div>-->
+<!--                </form>-->
+<!--                <div class="actions d-flex justify-content-center align-items-center pt-4 gap-2">-->
+<!--                    <a class="text-dark" th:href="@{/auth/login}">Back To Login</a>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="offset-3"></div>-->
+<!--    </div>-->
+<!--</main>-->
 <main th:fragment="signup" class="signup">
-    <div class="container-fluid">
-        <div class="row justify-content-center align-items-center m-5">
-            <div class="offset-3"></div>
+    <div class="auth-wrapper">
+        <div class="auth-card">
+            <!-- Left Panel -->
+            <div class="auth-left">
+                <div class="brand-card">
+                    <span class="brand-title">Acenda</span><span class="brand-stay">Stay.</span>
+                </div>
+            </div>
 
-            <div class="d-flex justify-content-center text-center flex-column col-6">
-                <div class="title h4 text-uppercase pb-3">Create Account</div>
-                <form action="/" method="post" class="form d-flex flex-column" id="formSignUp">
+            <!-- Right Panel -->
+            <div class="auth-right">
+                <div class="auth-form-container">
+                    <h2 class="auth-title">Create Account</h2>
 
-                    <div class="input-group pb-3">
-                        <input type="text" name="firstname" class="form-control border-1 rounded-0" id="firstname"
-                               placeholder="First Name" style="min-height: 3rem">
-                    </div>
+                    <form action="/" method="post" class="form" id="formSignUp">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" name="firstname" id="name"
+                                   class="form-input" placeholder="Enter your name">
+                        </div>
 
-                    <div class="input-group pb-3">
-                        <input type="text" name="lastname" class="form-control border-1 rounded-0" id="lastname"
-                               placeholder="Last Name" style="min-height: 3rem">
-                    </div>
+                        <div class="form-group">
+                            <label for="email">E mail</label>
+                            <input type="email" name="email" id="email"
+                                   class="form-input" placeholder="name@gmail.com">
+                        </div>
 
-                    <div class="input-group pb-3">
-                        <input type="email" name="email" class="form-control border-1 rounded-0" id="email"
-                               placeholder="Email" style="min-height: 3rem">
-                    </div>
-                    <div class="input-group pb-3">
-                        <input type="password" name="password" class="form-control border-1 rounded-0" id="password"
-                               placeholder="Password" style="min-height: 3rem">
-                    </div>
-                    <div class="input-group pb-3">
-                        <input type="password" name="confirmpassword" class="form-control border-1 rounded-0"
-                               id="confirmPassword" placeholder="Confirm Password" style="min-height: 3rem">
-                    </div>
+                        <div class="form-group">
+                            <label for="phone">Phone No</label>
+                            <input type="tel" name="phone" id="phone"
+                                   class="form-input" placeholder="With Country Code">
+                        </div>
 
-                    <span class="error pt-3 text-danger"></span>
+                        <div class="form-group">
+                            <label for="country">Country</label>
+                            <input type="text" name="country" id="country"
+                                   class="form-input" placeholder="Country Name">
+                        </div>
 
-                    <div>
-                        <button type="submit" class="btn text-uppercase p-3 px-5 text-dark border-0 rounded-0"
-                                style="background-color: #E3C5B8">Create
-                        </button>
-                    </div>
-                </form>
-                <div class="actions d-flex justify-content-center align-items-center pt-4 gap-2">
-                    <a class="text-dark" th:href="@{/auth/login}">Back To Login</a>
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" name="username" id="username"
+                                   class="form-input" placeholder="Username">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <div class="input-password-wrapper">
+                                <input type="password" name="password" id="password"
+                                       class="form-input" placeholder="6+ characters">
+                                <button type="button" class="toggle-password">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                              d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <span class="error text-danger"></span>
+
+                        <p class="terms-text">
+                            By signing up you agree to <a href="#" class="terms-link">terms and conditions</a> at zoho.
+                        </p>
+
+                        <button type="submit" class="btn-primary">Register</button>
+
+                        <a th:href="@{/auth/login}" class="link-secondary">Login</a>
+                    </form>
                 </div>
             </div>
         </div>
-        <div class="offset-3"></div>
     </div>
 </main>

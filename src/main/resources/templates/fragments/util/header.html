@@ -6,21 +6,35 @@
             </a>
             <ul class="navbar__links">
                 <li><a href="/" class="navbar__link active">Home</a></li>
-                <li><a href="/destinations" class="navbar__link">Destinations</a></li>
+                <li><a href="/booking" class="navbar__link">Booking</a></li>
                 <li><a href="/blog" class="navbar__link">Blog</a></li>
                 <li><a href="/news" class="navbar__link">News</a></li>
                 <li><a href="/contact" class="navbar__link">Contact</a></li>
             </ul>
             <div class="navbar__cta">
-                <a href="/login"  class="btn btn-outline btn--sm">Sign In</a>
-                <a href="/signup" class="btn btn-primary btn--sm">Sign Up</a>
+                <div id="guestSection">
+                    <a href="/auth/login"  class="btn btn-outline btn--sm">Sign In</a>
+                    <a href="/auth/register" class="btn btn-primary btn--sm">Sign Up</a>
+                </div>
+                <div id="userSection" class="hidden">
+                    <div class="user-dropdown">
+                        <span id="username"></span>
+                        <span class="arrow">▼</span>
+
+                        <div class="dropdown-menu" id="userDropdown">
+                            <a href="/profile">Profile</a>
+                            <a href="/booking">My Booking</a>
+                            <a href="#" id="logoutBtn">Logout</a>
+                        </div>
+                    </div>
+                </div>
             </div>
             <button class="navbar__hamburger" id="navToggle"><span></span><span></span><span></span></button>
         </div>
         <div class="navbar__mobile" id="mobileMenu">
             <ul>
                 <li><a href="/">Home</a></li>
-                <li><a href="/destinations">Destinations</a></li>
+                <li><a href="/booking">Booking</a></li>
                 <li><a href="/blog">Blog</a></li>
                 <li><a href="/news">News</a></li>
                 <li><a href="/contact">Contact</a></li>
@@ -31,4 +45,5 @@
             </div>
         </div>
     </nav>
+    <script th:src="@{/js/util/header.js}"></script>
 </th:block>

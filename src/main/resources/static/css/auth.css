@@ -1,0 +1,187 @@
+/* ===== AUTH LAYOUT ===== */
+.auth-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 64px);
+    background-color: #f3f4f6;
+    padding: 2rem;
+}
+
+/* Card bao bọc cả 2 panel */
+.auth-card {
+    display: flex;
+    width: 100%;
+    max-width: 1200px;
+    min-height: 560px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
+}
+
+/* Left Panel - Image */
+.auth-left {
+    flex: 0 0 50%;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.brand-card {
+    background: rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(6px);
+    border-radius: 16px;
+    padding: 1.5rem 2.5rem;
+    font-size: 2.2rem;
+    font-weight: 700;
+}
+
+.brand-title {
+    color: #2563eb; /* blue */
+}
+
+.brand-stay {
+    color: #1e3a5f; /* dark navy */
+}
+
+/* Right Panel - Form */
+.auth-right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2.5rem 2rem;
+    background-color: #ffffff;
+    overflow-y: auto;
+}
+
+.auth-form-container {
+    width: 100%;
+    max-width: 380px;
+}
+
+.auth-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+/* Form Groups */
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #222;
+    margin-bottom: 0.4rem;
+}
+
+.form-input {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    border: 1.5px solid #d1d5db;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    color: #333;
+    background: #fff;
+    outline: none;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+}
+
+.form-input::placeholder {
+    color: #aaa;
+}
+
+.form-input:focus {
+    border-color: #2563eb;
+}
+
+/* Password wrapper */
+.input-password-wrapper {
+    position: relative;
+}
+
+.input-password-wrapper .form-input {
+    padding-right: 3rem;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 0.85rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #aaa;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+/* Terms */
+.terms-text {
+    font-size: 0.82rem;
+    color: #666;
+    margin: 0.75rem 0 1.25rem;
+}
+
+.terms-link {
+    color: #2563eb;
+    text-decoration: none;
+}
+
+/* Buttons */
+.btn-primary {
+    display: block;
+    width: 100%;
+    padding: 0.9rem;
+    background-color: #2563eb;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    text-align: center;
+}
+
+.btn-primary:hover {
+    background-color: #1d4ed8;
+}
+
+.link-secondary {
+    display: block;
+    text-align: center;
+    margin-top: 1.1rem;
+    color: #333;
+    text-decoration: underline;
+    font-size: 0.92rem;
+}
+
+.link-secondary:hover {
+    color: #2563eb;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .auth-left {
+        display: none;
+    }
+    .auth-right {
+        padding: 2rem 1.25rem;
+    }
+    .auth-card {
+        border-radius: 16px;
+    }
+}
