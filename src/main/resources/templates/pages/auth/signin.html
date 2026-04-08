@@ -1,14 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<th:block th:insert="~{fragments/heading/heading :: heading(title = 'Sign In')}"/>
-<link rel="stylesheet" th:href="@{/css/auth.css}">
-<body>
-<body>
-<!--<th:block th:insert="~{fragments/util/header :: header}"/>-->
-<th:block th:insert="~{fragments/auth/signin :: signin}"/>
-<th:block th:insert="~{fragments/util/footer :: footer}"/>
+    <th:block th:insert="~{fragments/heading/heading :: heading(title = 'Sign In')}"/>
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
+    <body>
+        <th:block th:insert="~{fragments/auth/signin :: signin}"/>
+        <th:block th:insert="~{fragments/util/footer :: footer}"/>
 
-<th:block th:insert="~{fragments/scripts/scripts :: scripts}"/>
-<script th:src="@{/js/auth/signIn.js}"></script>
-</body>
+        <th:block th:insert="~{fragments/scripts/scripts :: scripts}"/>
+        <script th:src="@{/js/auth/signIn.js}"></script>
+    </body>
 </html>
