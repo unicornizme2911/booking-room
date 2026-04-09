@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
@@ -47,9 +48,9 @@ public class PaymentService {
         String vnp_Version = "2.1.0";
         String vnp_Command = "pay";
         String orderType = "order";
-        long amount = 0;
+        BigDecimal amount = new BigDecimal("0");
         try {
-            amount = request.getTotal() * 100;
+            amount = request.getTotal().multiply(BigDecimal.valueOf(100));
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("ERR: Amount must be a number");
         }
@@ -138,11 +139,11 @@ public class PaymentService {
             String txnRef = fields.get("vnp_TxnRef");
             var payment = paymentRepository.findByTxnRef(txnRef)
                     .orElseThrow(() -> new RuntimeException("Payment Not Found"));
-            if (!"PENDING".equals(payment.getStatus())) {
+            if (!(PaymentStatus.PENDING).equals(payment.getStatus())) {
                 throw new RuntimeException("Invalid Payment Status");
             }
             long total = Long.parseLong(fields.get("vnp_Amount")) / 100;
-            if (payment.getTotal() != total) {
+            if (payment.getTotal().compareTo(BigDecimal.valueOf(total)) != 0) {
                 throw new RuntimeException("Invalid Payment Amount");
             }
             var reservation = reservationRepository

@@ -2,6 +2,8 @@ package com.booking.models;
 import lombok.*;
 import jakarta.persistence.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.math.BigDecimal;
 import java.util.*;
 
 @Entity
@@ -21,7 +23,7 @@ public class TransportModel {
     private String vehicle;
 
     @Column(nullable = false)
-    private Double price;
+    private BigDecimal price;
 
     @OneToMany(mappedBy = "transport")
     private List<ReservationModel> reservations;

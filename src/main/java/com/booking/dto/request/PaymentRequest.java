@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -12,6 +14,6 @@ import lombok.NoArgsConstructor;
 public class PaymentRequest {
     private String txnRef;
     private Long reservation_id;
-    private Long total;
+    private BigDecimal total;
     private String provider;
 }

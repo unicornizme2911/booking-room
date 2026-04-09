@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -16,6 +17,6 @@ public class TransportResponse {
     private Long id;
     @JsonProperty("name")
     private String vehicle;
-    private Double price;
+    private BigDecimal price;
     private List<ReservationResponse> reservations;
 }

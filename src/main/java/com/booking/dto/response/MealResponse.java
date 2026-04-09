@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -14,6 +16,6 @@ public class MealResponse {
     private Long id;
     @JsonProperty("name")
     private String name;
-    private Double price;
+    private BigDecimal price;
     private String description;
 }

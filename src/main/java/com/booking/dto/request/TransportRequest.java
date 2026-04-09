@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -14,5 +16,5 @@ public class TransportRequest {
     private Long id;
     @NotEmpty(message = "Transport name is required")
     private String vehicle;
-    private Double price;
+    private BigDecimal price;
 }

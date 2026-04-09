@@ -18,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.TextStyle;
@@ -59,14 +60,12 @@ public class BookingController {
             @RequestBody BookingPreviewRequest request
     ){
         var reservation = reservationService.preview(request);
-        System.out.println(reservation);
         return ResponseEntity.ok().body(reservation);
     }
 
     @GetMapping("/review")
     public String reviewPage(@RequestParam Long reservationId, Model model){
         var reservation = reservationService.get(reservationId);
-        System.out.println(reservation);
         LocalDate checkIn = reservation.getCheck_in().toInstant()
                 .atZone(ZoneId.systemDefault())
                 .toLocalDate();
@@ -75,21 +74,23 @@ public class BookingController {
                 .toLocalDate();
         String checkInDay = checkIn.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
         String checkOutDay = checkOut.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
-        long nights = ChronoUnit.DAYS.between(checkIn, checkOut);
-        double total = reservation.getRooms().stream().mapToDouble(r -> r.getCategory().getPrice()).sum();
+        var nights = ChronoUnit.DAYS.between(checkIn, checkOut);
+        BigDecimal total = reservation.getRooms().stream()
+                .map(r -> r.getCategory().getPrice())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
         model.addAttribute("step", 2);
         model.addAttribute("checkInDay", checkInDay);
         model.addAttribute("checkOutDay", checkOutDay);
         model.addAttribute("reservation", reservation);
         model.addAttribute("nights", nights);
-        model.addAttribute("total", total*nights);
+        model.addAttribute("total", total.multiply(BigDecimal.valueOf(nights)));
         return "pages/booking";
     }
 
     @GetMapping("/payment")
     public String payment(@RequestParam Long reservationId, Model model){
         var reservation = reservationService.get(reservationId);
-        double total = reservationService.getTotal(reservationId);
+        BigDecimal total = reservationService.getTotal(reservationId);
         model.addAttribute("total", total);
         model.addAttribute("reservation", reservation);
         model.addAttribute("step", 3);
@@ -99,7 +100,7 @@ public class BookingController {
     @PostMapping("/payment/vnpay")
     public ResponseEntity<String> createPayment(@RequestParam Long reservationId) {
         try {
-            long total = reservationService.getTotal(reservationId);
+            BigDecimal total = reservationService.getTotal(reservationId);
             String txnRef = VNPayConfig.getRandomNumber(8);
 
             PaymentRequest paymentRequest = new PaymentRequest();

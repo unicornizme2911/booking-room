@@ -4,6 +4,7 @@ import lombok.*;
 import jakarta.persistence.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
@@ -23,7 +24,7 @@ public class MealModel {
     private String name;
 
     @Column(nullable = false)
-    private Double price;
+    private BigDecimal price;
 
     @Column(nullable = false)
     private String description;

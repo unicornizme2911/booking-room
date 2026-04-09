@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.math.BigDecimal;
+
 @Entity
 @Builder
 @AllArgsConstructor
@@ -17,7 +19,7 @@ public class ReservationRoom {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Double price_at_booking;
+    private BigDecimal price_at_booking;
 
     @ManyToOne
     @JoinColumn(name = "reservation_id")

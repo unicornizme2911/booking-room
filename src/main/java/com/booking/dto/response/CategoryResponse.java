@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -21,7 +22,7 @@ public class CategoryResponse {
     private String description;
     private int capacity;
     @NotEmpty(message = "Price is required")
-    private double price;
+    private BigDecimal price;
     private String bed_type;
     private int room_size;
     private List<String> images;

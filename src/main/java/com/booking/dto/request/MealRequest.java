@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -14,6 +16,6 @@ public class MealRequest {
     private Long id;
     @NotEmpty(message = "Meal name is required")
     private String name;
-    private Double price;
+    private BigDecimal price;
     private String description;
 }

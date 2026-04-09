@@ -3,6 +3,8 @@ package com.booking.models;
 import lombok.*;
 import jakarta.persistence.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.math.BigDecimal;
 import java.util.*;
 
 @Entity
@@ -28,7 +30,7 @@ public class CategoryModel {
     private int capacity;
 
     @Column(nullable = false)
-    private double price;
+    private BigDecimal price;
 
     @Column(nullable = false)
     private String bed_type;

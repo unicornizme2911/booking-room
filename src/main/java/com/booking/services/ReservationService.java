@@ -15,6 +15,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -167,9 +168,10 @@ public class ReservationService {
                 throw new RuntimeException("Room already booked");
             } else {
                 ReservationRoom rr = new ReservationRoom();
+                var price = room.getCategory().getPrice().multiply(BigDecimal.valueOf(request.getNights()));
                 rr.setRoom(room);
                 rr.setReservation(reservation);
-                rr.setPrice_at_booking(room.getCategory().getPrice()*request.getNights());
+                rr.setPrice_at_booking(price);
                 reservationRoomRepository.save(rr);
             }
         }
@@ -209,11 +211,11 @@ public class ReservationService {
         return toResponse(reservation);
     }
 
-    public Long getTotal(Long id) {
+    public BigDecimal getTotal(Long id) {
         var reservation = get(id);
-        long total = 0;
+        BigDecimal total = new BigDecimal("0");
         for(RoomResponse room : reservation.getRooms()) {
-            total += (long) room.getCategory().getPrice();
+            total.add(room.getCategory().getPrice());
         }
         return total;
     }

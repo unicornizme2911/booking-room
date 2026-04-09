@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -22,7 +23,7 @@ public class PaymentModel {
     @Column(unique = true)
     private String txnRef;
 
-    private Long total;
+    private BigDecimal total;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
