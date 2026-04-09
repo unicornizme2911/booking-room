@@ -8,7 +8,6 @@ window.initCategoryAvailable = function (state) {
     const checkIn = state?.checkIn || null;
     const checkOut = state?.checkOut || null;
     const nights = state?.nights || 0;
-    console.log(checkIn + "  " + checkOut);
     let totalAmount = 0;
     let bookingState = {};
 
@@ -194,6 +193,7 @@ window.initCategoryAvailable = function (state) {
                 body: JSON.stringify(payload)
             }).then(res => res.json())
                 .then(reservation => {
+                    console.log(reservation);
                     window.location.href = `booking/review?reservationId=${reservation.id}`;
                 });
         });

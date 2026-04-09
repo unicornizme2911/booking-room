@@ -3,30 +3,71 @@
 
         <!-- LEFT -->
         <div class="payment-left">
-            <h2>Your booking</h2>
+            <p class="pay-section-title">Your booking</p>
+            <div class="pay-card">
 
-            <div th:each="room : ${reservation.rooms}" class="room-item">
-                <span th:text="${room.category.name}"></span>
-                <span th:text="${room.roomNumber}"></span>
+                <div th:each="room : ${reservation.rooms}" class="room-item">
+                    <div class="room-item-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M2 4v16M2 8h18a2 2 0 0 1 2 2v10M2 17h20M6 8v9"/>
+                        </svg>
+                    </div>
+                    <div class="room-item-info">
+                        <p class="room-item-name" th:text="${room.category.name}"></p>
+                        <p class="room-item-number" th:text="'Room ' + ${room.roomNumber}"></p>
+                    </div>
+                    <span class="room-item-badge">1 room</span>
+                </div>
+
+                <div class="booking-dates">
+                    <div class="date-box">
+                        <div class="date-box-label">Check-in</div>
+                        <div class="date-box-value" th:text="${#temporals.format(checkIn, 'dd MMM yyyy')}"></div>
+                    </div>
+                    <div class="date-box">
+                        <div class="date-box-label">Check-out</div>
+                        <div class="date-box-value" th:text="${#temporals.format(checkOut, 'dd MMM yyyy')}"></div>
+                    </div>
+                </div>
+
+                <div class="nights-summary">
+                    <span>Duration</span>
+                    <span th:text="${nights} + ' nights'"></span>
+                </div>
+
             </div>
         </div>
 
         <!-- RIGHT -->
         <div class="payment-right">
-
-            <h2>Payment</h2>
-
-            <div class="payment-total">
-                <span>Total</span>
-                <strong th:text="${#numbers.formatDecimal(total,0,'COMMA',0,'POINT')} + ' VND'"></strong>
+            <p class="pay-section-title">Payment summary</p>
+            <div class="pay-card">
+                <div class="price-divider"></div>
+                <div class="price-total-row">
+                    <span class="price-total-label">Total</span>
+                    <span class="price-total-value"
+                          th:text="${#numbers.formatDecimal(total,0,'COMMA',0,'POINT')} + ' VND'"></span>
+                </div>
+                <button id="payBtn" class="btn-pay" th:data-reservation-id="${reservation.id}">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="1" y="4" width="22" height="16" rx="2"/>
+                        <line x1="1" y1="10" x2="23" y2="10"/>
+                    </svg>
+                    Pay with VNPay
+                </button>
+                <div class="vnpay-note">
+                    <span class="vnpay-badge">VNPay</span>
+                    <span class="vnpay-note-text">Thanh toán an toàn</span>
+                </div>
+                <div class="ssl-note">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2"/>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                    Thông tin được mã hoá SSL
+                </div>
+                <div id="loading" class="hidden">Redirecting...</div>
             </div>
-
-            <button id="payBtn" class="btn-pay" th:data-reservation-id="${reservation.id}">
-                Pay with VNPay
-            </button>
-
-            <div id="loading" class="hidden">Redirecting...</div>
-
         </div>
 
     </div>

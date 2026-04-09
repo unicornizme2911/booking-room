@@ -1,0 +1,28 @@
+<section th:fragment="top-bookings" class="section top-bookings" id="top-bookings">
+    <div class="container">
+        <div class="section-header fade-up">
+            <span class="tag">Trending</span>
+            <h2 class="section-title">Top Book Now</h2>
+        </div>
+        <div class="prop-grid" id="propGrid">
+            <article class="prop-card fade-up">
+                <div class="prop-card__img-wrap">
+                    <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=600" alt="The Oasis" loading="lazy"/>
+                    <span class="badge badge--green">★ 4.9</span>
+                    <button class="prop-card__wishlist" aria-label="Save">♡</button>
+                </div>
+                <div class="prop-card__body">
+                    <h4 class="prop-card__name">The Oasis</h4>
+                    <p class="prop-card__location">📍 Bali, Indonesia</p>
+                    <div class="prop-card__footer">
+                        <span class="prop-card__price">$10,000 <small>/night</small></span>
+                        <a href="/property/the-oasis" class="btn btn-primary btn--sm">Book</a>
+                    </div>
+                </div>
+            </article>
+        </div>
+        <div class="top-bookings__more fade-up">
+            <a href="/properties" class="btn btn-outline">See all <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        </div>
+    </div>
+</section>

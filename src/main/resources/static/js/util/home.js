@@ -158,8 +158,6 @@ createCarousel({
     });
 })();
 
-
-// ── Newsletter form ──────────────────────────────────────────
 (function initNewsletter() {
     const form = document.getElementById('newsletterForm');
     if (!form) return;
@@ -179,8 +177,6 @@ createCarousel({
     });
 })();
 
-
-// ── Pause marquee on hover ────────────────────────────────────
 (function initMarquee() {
     const track = document.getElementById('partnersTrack');
     if (!track) return;

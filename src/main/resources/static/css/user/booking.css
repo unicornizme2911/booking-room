@@ -1,10 +1,3 @@
-/* ============================================================
-   booking.css — Bootstrap-safe
-   Scope: .booking  → header/search/calendar/stepper
-          .booking-steps → main content, cards, modal
-   Không đổi tên class HTML, dùng specificity để override Bootstrap
-   ============================================================ */
-
 :root {
     --bk-primary:       #1a3c6e;
     --bk-primary-hover: #0f2847;
@@ -843,12 +836,12 @@
     display: none !important;
 }
 
-.modal-category-overlay {
+.bk-modal-overlay {
     position: fixed;
     inset: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0,0,0,0.6);
+    background: rgba(0, 0, 0, 0.6);
     display: none;
     z-index: 9999;
     justify-content: center;
@@ -856,7 +849,7 @@
     padding: 20px;
 }
 
-.modal-category-overlay.active {
+.bk-modal-overlay.active {
     display: flex;
 }
 
@@ -865,7 +858,7 @@
     to   { opacity: 1; transform: scale(1); }
 }
 
-.modal-category {
+.bk-modal {
     background: #fff;
     width: 100%;
     max-width: 1100px;
@@ -873,182 +866,171 @@
     border-radius: 12px;
     overflow-y: auto;
     position: relative;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
     animation: bkModalIn 0.25s ease;
 }
 
-.modal-category .modal-close {
-    position: absolute !important;
-    top: 10px !important;
-    right: 15px !important;
-    font-size: 28px !important;
-    border: none !important;
-    background: transparent !important;
-    cursor: pointer !important;
-    color: #999 !important;
-    line-height: 1 !important;
-    z-index: 10 !important;
-    opacity: 1 !important;
-    padding: 0 !important;
-    width: auto !important;
-    height: auto !important;
+.bk-modal-close {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    font-size: 28px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: #999;
+    line-height: 1;
+    z-index: 10;
+    padding: 0;
+    width: auto;
+    height: auto;
 }
 
-.modal-category .modal-close:hover {
-    color: #333 !important;
+.bk-modal-close:hover {
+    color: #333;
 }
 
-/* Override Bootstrap .modal-content */
-.modal-category > .modal-content,
-.modal-category .modal-content {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    gap: 40px !important;
-    padding: 40px !important;
-    border: none !important;
-    border-radius: 0 !important;
-    background: #fff !important;
-    position: static !important;
-    flex-direction: unset !important;
-    width: 100% !important;
-    pointer-events: auto !important;
-    box-shadow: none !important;
-    outline: 0 !important;
+.bk-modal .bk-modal-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    padding: 40px;
 }
 
-.modal-category .modal-images {
+.bk-modal .modal-images {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 16px;
 }
 
-.modal-category .main-image {
+.bk-modal .main-image {
     overflow: hidden;
     border-radius: 12px;
-    height: 400px;
+    height: 340px;
 }
 
-.modal-category .main-image img {
+.bk-modal .main-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 12px;
     display: block;
 }
 
-.modal-category .side-images {
+.bk-modal .side-images {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 15px;
+    gap: 12px;
 }
 
-.modal-category .side-images img {
+.bk-modal .side-images img {
     width: 100%;
-    height: 180px;
+    height: 160px;
     object-fit: cover;
     border-radius: 8px;
     display: block;
 }
 
-.modal-category .modal-details {
+.bk-modal .modal-details {
     display: flex;
     flex-direction: column;
-    gap: 30px;
+    gap: 24px;
+    padding-top: 8px;
 }
 
-/* .hotel-header bên trong modal — override .booking-steps .hotel-header */
-.modal-category .modal-content .hotel-header {
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: flex-start !important;
-    gap: 4px;
+.bk-modal .hotel-header {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }
 
-.modal-category .modal-content .hotel-header h1 {
-    font-size: 28px;
+.bk-modal .hotel-header h1 {
+    font-size: 26px;
+    font-weight: 700;
     color: #1a1a1a;
     margin: 0;
-    font-weight: 700;
 }
 
-.modal-category .hotel-location {
+.bk-modal .hotel-location {
+    font-size: 13px;
     color: #999;
-    font-size: 14px;
     margin: 0;
 }
 
-.modal-category .description-section h2 {
-    font-size: 18px;
+.bk-modal .description-section h2 {
+    font-size: 15px;
     font-weight: 700;
-    margin: 0 0 12px 0;
     color: #1a1a1a;
+    margin: 0 0 8px;
 }
 
-.modal-category .description-section p {
-    color: #666;
-    line-height: 1.6;
+.bk-modal .description-section p {
     font-size: 14px;
+    color: #555;
+    line-height: 1.65;
     margin: 0;
 }
 
-.modal-category .booking-section {
-    background-color: #f0f4ff;
-    padding: 25px;
-    border-radius: 8px;
+.bk-modal .booking-section {
+    background: #f0f4ff;
+    padding: 20px;
+    border-radius: 10px;
     border-left: 4px solid #2563eb;
 }
 
-.modal-category .booking-section h2 {
-    font-size: 18px;
+.bk-modal .booking-section h2 {
+    font-size: 15px;
     font-weight: 700;
-    margin: 0 0 15px 0;
     color: #1a1a1a;
+    margin: 0 0 12px;
 }
 
-.modal-category .price-box {
-    margin-bottom: 20px;
+.bk-modal .price-box {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
 }
 
-.modal-category .price-box .price-amount {
-    font-size: 28px !important;
-    font-weight: 700 !important;
-    color: #2563eb !important;
-    display: inline !important;
+.bk-modal .price-box .price-amount {
+    font-size: 26px;
+    font-weight: 700;
+    color: #2563eb;
 }
 
-.modal-category .price-label {
-    font-size: 14px;
+.bk-modal .price-label {
+    font-size: 13px;
     color: #999;
-    margin-left: 8px;
 }
 
-.modal-category .amenities-section {
-    display: grid !important;
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 15px;
+.bk-modal .amenities-section {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
     padding-top: 20px;
     border-top: 1px solid #eee;
 }
 
-.modal-category .amenity-item {
+.bk-modal .amenity-item {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 10px;
 }
 
-.modal-category .amenity-icon {
-    font-size: 28px;
+.bk-modal .amenity-icon {
+    width: 36px;
+    height: 36px;
+    background: #f3f4f6;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
 }
 
-.modal-category .amenity-item p {
-    font-size: 14px;
-    color: #666;
+.bk-modal .amenity-item p {
+    font-size: 13px;
+    color: #444;
     margin: 0;
-}
-
-.modal-category .amenity-item strong {
-    color: #1a1a1a;
-    font-weight: 700;
 }
 
 /* ============================================================
@@ -1103,14 +1085,26 @@
         border-bottom: 1px solid #eee;
     }
 
-    .modal-category > .modal-content,
-    .modal-category .modal-content {
+    .bk-modal > .modal-content,
+    .bk-modal .modal-content {
         grid-template-columns: 1fr !important;
         padding: 20px !important;
         gap: 24px !important;
     }
 
-    .modal-category .main-image { height: 280px; }
+    .bk-modal .main-image { height: 280px; }
+}
+
+@media (max-width: 768px) {
+    .bk-modal .bk-modal-body {
+        grid-template-columns: 1fr;
+        padding: 24px;
+        gap: 24px;
+    }
+
+    .bk-modal .main-image {
+        height: 240px;
+    }
 }
 
 @media (max-width: 576px) {
@@ -1134,6 +1128,6 @@
         max-width: 340px;
     }
 
-    .modal-category .side-images { grid-template-columns: 1fr; }
-    .modal-category .side-images img { height: 160px; }
+    .bk-modal .side-images { grid-template-columns: 1fr; }
+    .bk-modal .side-images img { height: 160px; }
 }

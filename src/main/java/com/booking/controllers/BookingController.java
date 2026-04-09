@@ -91,8 +91,18 @@ public class BookingController {
     public String payment(@RequestParam Long reservationId, Model model){
         var reservation = reservationService.get(reservationId);
         BigDecimal total = reservationService.getTotal(reservationId);
+        LocalDate checkIn = reservation.getCheck_in().toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+        LocalDate checkOut = reservation.getCheck_out().toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+        var nights = ChronoUnit.DAYS.between(checkIn, checkOut);
         model.addAttribute("total", total);
+        model.addAttribute("nights", nights);
         model.addAttribute("reservation", reservation);
+        model.addAttribute("checkIn", checkIn);
+        model.addAttribute("checkOut", checkOut);
         model.addAttribute("step", 3);
         return "pages/booking";
     }

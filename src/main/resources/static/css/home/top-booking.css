@@ -1,0 +1,95 @@
+.prop-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.prop-card {
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: #fff;
+    border: 1.5px solid var(--border);
+    transition: box-shadow var(--transition), transform var(--transition);
+    animation-delay: var(--delay, 0s);
+}
+
+.prop-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-md);
+}
+
+.prop-card__img-wrap {
+    position: relative;
+    height: 180px;
+    overflow: hidden;
+}
+
+.prop-card__img-wrap img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform .5s ease;
+}
+
+.prop-card:hover .prop-card__img-wrap img { transform: scale(1.06); }
+
+.prop-card__img-wrap .badge {
+    position: absolute;
+    top: 10px; left: 10px;
+}
+
+.prop-card__wishlist {
+    position: absolute;
+    top: 10px; right: 10px;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.9);
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+    color: var(--text-mid);
+}
+
+.prop-card__wishlist:hover { background: #fff; color: var(--accent); }
+
+.prop-card__wishlist.saved { color: var(--accent); }
+
+.prop-card__body { padding: 14px 16px 16px; }
+
+.prop-card__name {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.prop-card__location {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-bottom: 12px;
+}
+
+.prop-card__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.prop-card__price {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.prop-card__price small {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--text-light);
+}
+
+.top-bookings__more {
+    text-align: center;
+    margin-top: 40px;
+}
