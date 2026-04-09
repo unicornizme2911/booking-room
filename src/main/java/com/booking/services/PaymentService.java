@@ -26,6 +26,8 @@ public class PaymentService {
     private PaymentRepository paymentRepository;
     @Autowired
     private ReservationRepository reservationRepository;
+    @Autowired
+    private ReservationService reservationService;
 
     public PaymentModel add(PaymentRequest request) {
         var reservation = reservationRepository.findById(String.valueOf(request.getReservation_id())).orElseThrow();
@@ -48,9 +50,9 @@ public class PaymentService {
         String vnp_Version = "2.1.0";
         String vnp_Command = "pay";
         String orderType = "order";
-        BigDecimal amount = new BigDecimal("0");
+        Long amount;
         try {
-            amount = request.getTotal().multiply(BigDecimal.valueOf(100));
+            amount = request.getTotal().multiply(BigDecimal.valueOf(100)).longValue();
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("ERR: Amount must be a number");
         }
@@ -154,9 +156,8 @@ public class PaymentService {
                 payment.setStatus(PaymentStatus.SUCCESS);
                 payment.setTransactionNo(fields.get("vnp_TransactionNo"));
                 payment.setPaidAt(LocalDateTime.now());
-                reservation.setStatus(ReservationStatus.CONFIRMED);
+                reservationService.confirm(reservation);
                 paymentRepository.save(payment);
-                reservationRepository.save(reservation);
                 return 1;
             } else {
                 payment.setStatus(PaymentStatus.FAILED);

@@ -45,6 +45,9 @@ public class CategoryModel {
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<RoomModel> rooms;
 
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    private List<FeedbackModel> feedbacks;
+
     @ManyToMany
     @JoinTable(
             name = "category_features",

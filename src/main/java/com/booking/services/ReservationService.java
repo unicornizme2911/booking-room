@@ -46,6 +46,8 @@ public class ReservationService {
     private ReservationRepository reservationRepository;
     @Autowired
     private ReservationRoomRepository reservationRoomRepository;
+    @Autowired
+    private CategoryStatsService categoryStatsService;
 
 
     public ReservationModel toEntity(ReservationRequest request){
@@ -186,15 +188,17 @@ public class ReservationService {
     }
 
     @Transactional
-    public void confirm(Long id){
-
-        ReservationModel res = reservationRepository.findById(String.valueOf(id)).orElseThrow();
-
-        if(res.getExpiredAt().isBefore(LocalDateTime.now())){
+    public void confirm(ReservationModel reservation){
+        if(reservation.getExpiredAt().isBefore(LocalDateTime.now())){
             throw new RuntimeException("Reservation expired");
         }
 
-        res.setStatus(ReservationStatus.CONFIRMED);
+        reservation.setStatus(ReservationStatus.CONFIRMED);
+        reservationRepository.save(reservation);
+        for (ReservationRoom rr : reservation.getReservation_rooms()) {
+            Long category_id = rr.getRoom().getCategory().getId();
+            categoryStatsService.updateBooking(category_id, 1);
+        }
     }
 
     public ReservationResponse get(Long id){
@@ -213,9 +217,9 @@ public class ReservationService {
 
     public BigDecimal getTotal(Long id) {
         var reservation = get(id);
-        BigDecimal total = new BigDecimal("0");
+        BigDecimal total = BigDecimal.ZERO;
         for(RoomResponse room : reservation.getRooms()) {
-            total.add(room.getCategory().getPrice());
+            total = total.add(room.getCategory().getPrice());
         }
         return total;
     }

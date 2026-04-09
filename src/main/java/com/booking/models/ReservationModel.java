@@ -49,4 +49,7 @@ public class ReservationModel {
 
     @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL)
     private PaymentModel payment;
+
+    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL)
+    private List<FeedbackModel> feedbacks;
 }
