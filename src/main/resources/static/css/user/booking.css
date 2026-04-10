@@ -1034,6 +1034,74 @@
 }
 
 /* ============================================================
+   PAGINATION
+   ============================================================ */
+.booking-steps .pagination-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-top: 36px;
+    padding-top: 24px;
+    border-top: 1px solid var(--bk-border);
+}
+
+.booking-steps .pagination-info {
+    font-size: 13px;
+    color: #888;
+}
+
+.booking-steps .pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.booking-steps .page-btn {
+    min-width: 38px;
+    height: 38px;
+    padding: 0 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--bk-border);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--bk-text-dark);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: var(--bk-transition);
+}
+
+.booking-steps .page-btn:hover:not(.disabled):not(.active) {
+    border-color: var(--bk-accent);
+    color: var(--bk-accent);
+    background: #f0f7ff;
+}
+
+.booking-steps .page-btn.active {
+    background: var(--bk-primary);
+    border-color: var(--bk-primary);
+    color: #fff;
+    cursor: default;
+}
+
+.booking-steps .page-btn.disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.booking-steps .page-ellipsis {
+    font-size: 14px;
+    color: #aaa;
+    padding: 0 4px;
+    user-select: none;
+}
+
+/* ============================================================
    RESPONSIVE
    ============================================================ */
 @media (max-width: 992px) {

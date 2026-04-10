@@ -5,6 +5,7 @@ import com.booking.dto.response.ReservationResponse;
 import com.booking.models.ReservationStatus;
 import com.booking.services.ReservationService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,11 +18,13 @@ class ApiReservationController {
     @Autowired
     private ReservationService reservationService;
 
-    @PostMapping("/add")
-    public ResponseEntity<ReservationResponse> addReservation(
-            @ModelAttribute @Valid ReservationRequest reservationRequest
-    ){
-        return ResponseEntity.ok().body(reservationService.add(reservationRequest));
+    @PostMapping("/update/{id}")
+    public ResponseEntity<ReservationResponse> update(@PathVariable Long id,
+                                                      @RequestParam String full_name,
+                                                      @RequestParam String phone,
+                                                      @RequestParam @Email String email) {
+        var reservation = reservationService.update(id, full_name, phone, email);
+        return ResponseEntity.ok().body(reservation);
     }
 
     @PostMapping("/cancel/{id}")

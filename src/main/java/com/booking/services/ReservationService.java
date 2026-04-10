@@ -99,40 +99,8 @@ public class ReservationService {
                 .build();
     }
 
-    public ReservationResponse add(ReservationRequest request){
-        var transport = transportRepository.findById(request.getTransport_id()).orElse(null);
-
-        var user = userRepository.findById(request.getUser_id()).orElseThrow();
-
-        List<RoomModel> rooms = new ArrayList<>();
-        for(String rm: request.getRoom_number()){
-            rooms.add(roomRepository.findByRoomNumber(rm));
-        }
-
-        if(!request.getStatus().equalsIgnoreCase("pending")){
-            return null;
-        }
-
-        var reservation = toEntity(request);
-        reservation.setUser(user);
-        reservation.setTransport(transport);
-//        reservation.setRooms(rooms);
-
-        var reservationSaved = reservationRepository.save(reservation);
-
-        List<ReservationMeal> reservation_meals = new ArrayList<>();
-        if(request.getMeals() != null){
-            for(ReservationMealRequest mealRequest: request.getMeals()){
-                var meal = mealRepository.findById(mealRequest.getId()).orElseThrow();
-                reservation_meals.add(toEntity(reservationSaved, meal, mealRequest.getQuantity()));
-            }
-        }
-        reservationSaved.setReservation_meals(reservation_meals);
-        return toResponse(reservationSaved);
-    }
-
-    public ReservationResponse update(String id, String full_name, String phone, String email){
-        var reservation = reservationRepository.findById(id).orElseThrow();
+    public ReservationResponse update(Long id, String full_name, String phone, String email){
+        var reservation = reservationRepository.findById(String.valueOf(id)).orElseThrow();
         reservation.setFull_name(full_name);
         reservation.setPhone(phone);
         reservation.setEmail(email);

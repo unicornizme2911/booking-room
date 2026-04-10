@@ -8,19 +8,19 @@ import com.booking.models.CategoryModel;
 import com.booking.models.FeatureModel;
 import com.booking.repository.CategoryImageRepository;
 import com.booking.repository.CategoryRepository;
+import com.booking.repository.CategoryStatsRepository;
 import com.booking.repository.FeatureRepository;
 import com.booking.utils.FileUploadUtil;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class CategoryService {
@@ -34,6 +34,8 @@ public class CategoryService {
     private RoomService roomService;
     @Autowired
     private FeatureService featureService;
+    @Autowired
+    private CategoryStatsRepository categoryStatsRepository;
 
     public CategoryResponse toResponse(CategoryModel category){
         return CategoryResponse.builder()
@@ -101,7 +103,9 @@ public class CategoryService {
         return toResponse(categorySaved);
     }
 
-    public List<CategoryResponse> availableRooms(Date fromDate, Date toDate, int rooms, int adults, int children){
+    public Page<CategoryResponse> availableRooms(
+            Date fromDate, Date toDate, int rooms, int adults, int children, Pageable pageable)
+    {
         var guests = children + adults;
         if(fromDate == null || toDate == null || fromDate.after(toDate) || guests <= 0 || rooms <= 0){
             throw new RuntimeException("Invalid date range");
@@ -114,7 +118,16 @@ public class CategoryService {
                 responses.add(toResponse(category,c.getAvailable_rooms()));
             }
         });
-        return responses;
+        int total = responses.size();
+        int pageNumber = pageable.getPageNumber();
+        int pageSize = pageable.getPageSize();
+        int fromIndex = pageNumber * pageSize;
+        if (fromIndex >= total){
+            return new PageImpl<>(Collections.emptyList(), pageable, total);
+        }
+        int toIndex = Math.min(fromIndex + pageSize, total);
+        List<CategoryResponse> pageContent = responses.subList(fromIndex, toIndex);
+        return new PageImpl<>(pageContent, pageable, total);
     }
 
     public Page<CategoryResponse> get(int page, int size){

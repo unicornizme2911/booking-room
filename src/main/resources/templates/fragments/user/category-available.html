@@ -110,6 +110,60 @@
                     </div>
                 </th:block>
             </div>
+
+            <div class="pagination-wrapper" th:if="${totalPages > 1}">
+                <div class="pagination-info">
+                    Page <span th:text="${currentPage + 1}"></span> / <span th:text="${totalPages}"></span>
+                </div>
+                <div class="pagination-controls"
+                     th:data-from-date="${fromDate}"
+                     th:data-to-date="${toDate}"
+                     th:data-rooms="${rooms}"
+                     th:data-adults="${adults}"
+                     th:data-children="${children}"
+                >
+                    <!-- Prev -->
+                    <button class="page-btn page-nav"
+                            th:classappend="${currentPage == 0} ? ' disabled' : ''"
+                            th:data-page="${currentPage - 1}"
+                            th:disabled="${currentPage == 0}"
+                    >
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2"
+                        >
+                            <polyline points="15 18 9 12 15 6"/>
+                        </svg>
+                    </button>
+
+                    <!-- Page numbers -->
+                    <th:block th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+                        <th:block th:if="${i == 0 or i == totalPages - 1
+                                or (i >= currentPage - 1 and i <= currentPage + 1)}">
+                            <button class="page-btn page-nav"
+                                    th:classappend="${i == currentPage} ? ' active' : ''"
+                                    th:data-page="${i}"
+                                    th:text="${i + 1}">
+                            </button>
+                        </th:block>
+                        <span class="page-ellipsis"
+                              th:if="${(i == 1 and currentPage > 2)
+                                or (i == totalPages - 2 and currentPage < totalPages - 3)}">
+                            ...
+                        </span>
+                    </th:block>
+
+                    <!-- Next -->
+                    <button class="page-btn page-nav"
+                            th:classappend="${currentPage >= totalPages - 1} ? ' disabled' : ''"
+                            th:data-page="${currentPage + 1}"
+                            th:disabled="${currentPage >= totalPages - 1}">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 

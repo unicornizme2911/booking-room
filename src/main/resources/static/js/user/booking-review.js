@@ -64,6 +64,7 @@ document.addEventListener('DOMContentLoaded', function () {
             method: 'POST',
         }).catch(() => {});
     }
+
     function updateCountdown() {
         const now = new Date();
         const diff = expiredAt - now;
@@ -153,7 +154,23 @@ document.addEventListener('DOMContentLoaded', function () {
                 bookerEmail.focus();
                 return;
             }
-            window.location.href = `/booking/payment?reservationId=${reservationId}`;
+            const data = {
+                full_name : bookerName,
+                email : bookerEmail.value.trim(),
+                phone : phoneInput.value.trim(),
+            }
+            fetch(`api/reservations/update/${reservationId}`, {
+                method: 'POST',
+                credentials: 'include',
+                body: JSON.stringify(data),
+            }).then(res => res.json())
+                .then(reservation => {
+                    sessionStorage.removeItem("booking_form");
+                    sessionStorage.removeItem("expiredAt_" + reservationId);
+                    window.location.href = `/booking/payment?reservationId=${reservationId}`;
+                }).catch(error => {
+                    console.log(error);
+            })
         });
     }
 

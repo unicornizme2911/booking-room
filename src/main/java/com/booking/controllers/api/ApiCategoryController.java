@@ -2,7 +2,9 @@ package com.booking.controllers.api;
 
 import com.booking.dto.request.CategoryRequest;
 import com.booking.dto.response.CategoryResponse;
+import com.booking.dto.response.CategoryStatsResponse;
 import com.booking.services.CategoryService;
+import com.booking.services.CategoryStatsService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,8 @@ import java.util.List;
 class ApiCategoryController {
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private CategoryStatsService statsService;
 
     @GetMapping("/list")
     public ResponseEntity<List<CategoryResponse>> getAllCategories() {
@@ -48,15 +52,9 @@ class ApiCategoryController {
         return ResponseEntity.ok().body(categoryService.getAll());
     }
 
-    @PostMapping("/available")
-    public ResponseEntity<List<CategoryResponse>> searchAvailableCategories(
-            @RequestParam String fromDate,
-            @RequestParam String toDate,
-            @RequestParam int rooms,
-            @RequestParam int adults,
-            @RequestParam int children
-    ){
-        var categories = categoryService.availableRooms(new Date(fromDate), new Date(toDate), rooms, adults, children);
+    @GetMapping("/top-bookings")
+    public ResponseEntity<List<CategoryStatsResponse>> getTopBookings() {
+        var categories = statsService.getTopCategories();
         return ResponseEntity.ok().body(categories);
     }
 }

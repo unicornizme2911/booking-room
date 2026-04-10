@@ -328,6 +328,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
     const searchBtn = document.getElementById('searchCategories');
     if (searchBtn) {
         searchBtn.addEventListener('click', function () {
+            window.resetBookingState?.();
             const checkin = checkinDate.toISOString().split('T')[0];
             const checkout = checkoutDate.toISOString().split('T')[0];
             const container = document.querySelector('.booking-steps');

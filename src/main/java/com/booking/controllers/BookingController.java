@@ -5,13 +5,15 @@ import com.booking.dto.request.BookingPreviewRequest;
 import com.booking.dto.request.PaymentRequest;
 import com.booking.dto.request.VNPayRequest;
 import com.booking.dto.response.BookingPreviewResponse;
-import com.booking.models.PaymentModel;
-import com.booking.models.ReservationModel;
+import com.booking.dto.response.CategoryResponse;
 import com.booking.services.CategoryService;
 import com.booking.services.PaymentService;
 import com.booking.services.ReservationService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -23,6 +25,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.TextStyle;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Locale;
 
 @Controller
@@ -47,11 +50,29 @@ public class BookingController {
             @RequestParam int rooms,
             @RequestParam int adults,
             @RequestParam int children,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "2") int size,
             Model model
     ){
-        var categories = categoryService.availableRooms(java.sql.Date.valueOf(fromDate), java.sql.Date.valueOf(toDate), rooms, adults, children);
+        Pageable pageable = PageRequest.of(page, size);
+        Page<CategoryResponse> categories = categoryService.availableRooms(
+                java.sql.Date.valueOf(fromDate),
+                java.sql.Date.valueOf(toDate),
+                rooms,
+                adults,
+                children,
+                pageable);
         model.addAttribute("categories", categories);
-        model.addAttribute("step", 1);
+        model.addAttribute("totalPages", categories.getTotalPages());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalItems", categories.getTotalElements());
+
+        model.addAttribute("fromDate",  fromDate);
+        model.addAttribute("toDate",    toDate);
+        model.addAttribute("rooms",     rooms);
+        model.addAttribute("adults",    adults);
+        model.addAttribute("children",  children);
+        model.addAttribute("step",      1);
         return "fragments/user/category-available :: categoryList";
     }
 
